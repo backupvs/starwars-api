@@ -1,47 +1,54 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
 import { Person } from './entities/person.entity';
 
 @Injectable()
 export class PeopleService {
-    private lastPersonId = 0;
-    private people: Person[] = [];
+    constructor(
+        @InjectRepository(Person) private readonly personRepository: Repository<Person>
+    ) {}
 
-    findAll() {
-        return this.people;
+    findAll(): Promise<Person[]> {
+        return this.personRepository.find();
     }
 
+    async findOne(id: number): Promise<Person> {
+        const person = await this.personRepository.findOne({
+            where: { id },
+        })
 
-    findOne(id: number) {
-        const person = this.people.find(person => person.id === id);
         if (!person) {
             throw new NotFoundException(`People #${id} not found`);
         }
+
         return person;
     }
 
-    create(createPersonDto: CreatePersonDto) {
-        const newPerson = {
-            id: ++this.lastPersonId,
-            ...createPersonDto
-        }
-        this.people.push(newPerson);
-        return createPersonDto;
+    async create(createPersonDto: CreatePersonDto): Promise<Person> {
+        const newPerson = this.personRepository.create(createPersonDto);
+
+        return this.personRepository.save(newPerson);
     }
 
-    update(id: number, updatePersonDto: UpdatePersonDto) {
-        const person = this.findOne(id);
-        return '*updated*';
-    }
+    async update(id: number, updatePersonDto: UpdatePersonDto): Promise<Person> {
+        const person = await this.personRepository.preload({
+            id,
+            ...updatePersonDto
+        });
 
-    remove(id: number) {
-        const index = this.people.findIndex(person => person.id === id);
-        if (index > -1) {
-            this.people.splice(index, 1);
-            return `Removed #${id}`;
-        } else {
+        if (!person) {
             throw new NotFoundException(`People #${id} not found`);
         }
+
+        return this.personRepository.save(person);
+    }
+
+    async remove(id: number): Promise<Person> {
+        const person = await this.findOne(id);
+
+        return this.personRepository.remove(person);
     }
 }
