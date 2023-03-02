@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Person } from "../../people/entities/person.entity";
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: 'films' })
 export class Film {
@@ -23,8 +24,15 @@ export class Film {
     @Column('date')
     readonly releaseDate: Date;
 
-    @Column('text', { array: true })
-    readonly characters: string[] // People[]
+    // @Column('text', { array: true })
+    // readonly characters: string[] // People[]
+
+    @ManyToMany(
+        type => Person,
+        person => person.films,
+        { cascade: ['insert'] }
+    )
+    readonly characters: Person[];
 
     @Column('text', { array: true })
     readonly planets: string[] // Planet[]

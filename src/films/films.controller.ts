@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { CreateFilmDto } from './dto/create-film.dto';
-import UpdateFilmDto from './dto/update-film.dto';
-import { Film } from './entities/Film.entity';
+import { UpdateFilmDto } from './dto/update-film.dto';
+import { Film } from './entities/film.entity';
 import { FilmsService } from './films.service';
 
 @Controller('films')

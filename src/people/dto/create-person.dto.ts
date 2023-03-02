@@ -1,3 +1,5 @@
+import { CreateFilmDto } from "../../films/dto/create-film.dto";
+
 export class CreatePersonDto {
     readonly name: string;
     readonly height: number;
@@ -8,7 +10,8 @@ export class CreatePersonDto {
     readonly birthYear: string;
     readonly gender: string;
     readonly homeworld: string; // Planet
-    readonly films: string[]; // Film[]
+    // readonly films: string[]; // Film[]
+    readonly films: CreateFilmDto[]; // Film[]
     readonly species: string[]; // Species[]
     readonly vehicles: string[]; // Vehicle[]
     readonly starships: string[]; // Starship[]

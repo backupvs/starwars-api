@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Film } from "../../films/entities/film.entity";
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: 'people' })
 export class Person {
@@ -10,10 +11,10 @@ export class Person {
 
     @Column()
     readonly height: number;
-    
+
     @Column()
     readonly mass: number;
-    
+
     @Column()
     readonly hairColor: string;
 
@@ -31,16 +32,23 @@ export class Person {
 
     @Column()
     readonly homeworld: string; // Planet
-    
-    @Column('text', { array: true })
-    readonly films: string[]; // Film[]
-    
+
+    // @Column('text', { array: true })
+    // readonly films: string[]; // Film[]
+    @ManyToMany(
+        type => Film,
+        film => film.characters,
+        { cascade: ['insert'] }
+    )
+    @JoinTable()
+    readonly films: Film[];
+
     @Column('text', { array: true })
     readonly species: string[]; // Species[]
-    
+
     @Column('text', { array: true })
     readonly vehicles: string[]; // Vehicle[]
-    
+
     @Column('text', { array: true })
     readonly starships: string[]; // Starship[]
 }
