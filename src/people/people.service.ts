@@ -21,7 +21,7 @@ export class PeopleService {
         })
 
         if (!person) {
-            throw new NotFoundException(`People #${id} not found`);
+            throw new NotFoundException(`Person #${id} not found`);
         }
 
         return person;
@@ -40,7 +40,7 @@ export class PeopleService {
         });
 
         if (!person) {
-            throw new NotFoundException(`People #${id} not found`);
+            throw new NotFoundException(`Person #${id} not found`);
         }
 
         return this.personRepository.save(person);

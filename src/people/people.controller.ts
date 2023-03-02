@@ -13,7 +13,7 @@ export class PeopleController {
     }
 
     @Get(':id')
-    findOne(@Param('id') id: number) {
+    findOne(@Param('id') id: string) {
         return this.peopleService.findOne(Number(id));
     }
 
@@ -23,12 +23,12 @@ export class PeopleController {
     }
 
     @Patch(':id')
-    update(@Param('id') id: number, @Body() updatePersonDto: UpdatePersonDto) {
+    update(@Param('id') id: string, @Body() updatePersonDto: UpdatePersonDto) {
         return this.peopleService.update(Number(id), updatePersonDto);
     }
 
     @Delete(':id')
-    remove(@Param('id') id: number) {
+    remove(@Param('id') id: string) {
         return this.peopleService.remove(Number(id));
     }
 }
