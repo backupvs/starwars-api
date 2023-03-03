@@ -1,6 +1,7 @@
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Film } from "../../films/entities/film.entity";
 import { Planet } from "../../planets/entities/planet.entity";
+import { Species } from "../../species/entities/species.entity";
 
 @Entity({ name: 'people' })
 export class Person {
@@ -46,8 +47,13 @@ export class Person {
     @JoinTable()
     readonly films: Film[];
 
-    @Column('text', { array: true })
-    readonly species: string[]; // Species[]
+    @ManyToMany(
+        type => Species,
+        species => species.people,
+        { cascade: ['insert'] }
+    )
+    @JoinTable()
+    readonly species: Species[];
 
     @Column('text', { array: true })
     readonly vehicles: string[]; // Vehicle[]

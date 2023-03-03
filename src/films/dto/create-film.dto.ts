@@ -2,6 +2,7 @@ import { Type } from "class-transformer";
 import { IsString, IsDate, IsNumber, IsArray, ValidateNested } from "class-validator";
 import { CreatePersonDto } from "../../people/dto/create-person.dto";
 import { CreatePlanetDto } from "../../planets/dto/create-planet.dto";
+import { CreateSpeciesDto } from "../../species/dto/create-species.dto";
 
 export class CreateFilmDto {
     @IsString()
@@ -38,6 +39,8 @@ export class CreateFilmDto {
     @IsString({ each: true })
     readonly vehicles: string[]; // Vehicle[]
 
-    @IsString({ each: true })
-    readonly species: string[]; // Species[]
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => CreateSpeciesDto)
+    readonly species: CreateSpeciesDto[]; // Species[]
 }

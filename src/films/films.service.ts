@@ -8,20 +8,24 @@ import { Person } from '../people/entities/person.entity';
 import { CreatePersonDto } from '../people/dto/create-person.dto';
 import { Planet } from '../planets/entities/planet.entity';
 import { CreatePlanetDto } from '../planets/dto/create-planet.dto';
+import { CreateSpeciesDto } from '../species/dto/create-species.dto';
+import { Species } from '../species/entities/species.entity';
 
 @Injectable()
 export class FilmsService {
     constructor(
         @InjectRepository(Film) private readonly filmRepository: Repository<Film>,
         @InjectRepository(Person) private readonly personRepository: Repository<Person>,
-        @InjectRepository(Planet) private readonly planetRepository: Repository<Planet>
+        @InjectRepository(Planet) private readonly planetRepository: Repository<Planet>,
+        @InjectRepository(Species) private readonly speciesRepository: Repository<Species>
     ) {}
 
     findAll(): Promise<Film[]> {
         return this.filmRepository.find({
             relations: {
                 characters: true,
-                planets: true
+                planets: true,
+                species: true
             }
         });
     }
@@ -31,7 +35,8 @@ export class FilmsService {
             where: { id },
             relations: {
                 characters: true,
-                planets: true
+                planets: true,
+                species: true
             }
         });
 
@@ -49,13 +54,17 @@ export class FilmsService {
         const planets = await Promise.all(
             createFilmDto.planets.map(planet => this.preloadPlanet(planet))
         )
+        const species = await Promise.all(
+            createFilmDto.species.map(species => this.preloadSpecies(species)),
+        )
 
         const film = this.filmRepository.create({
             ...createFilmDto,
             characters,
-            planets
+            planets,
+            species
         });
-        
+
         return this.filmRepository.save(film);
     }
 
@@ -65,17 +74,23 @@ export class FilmsService {
             (await Promise.all(
                 updateFilmDto.characters.map(person => this.preloadPerson(person))
             ))
-        const planets = 
+        const planets =
             updateFilmDto.planets &&
             (await Promise.all(
                 updateFilmDto.planets.map(planet => this.preloadPlanet(planet))
             ))
-        
+        const species =
+            updateFilmDto.species &&
+            (await Promise.all(
+                updateFilmDto.species.map(species => this.preloadSpecies(species))
+            ));
+
         const film = await this.filmRepository.preload({
             id,
             ...updateFilmDto,
             characters,
-            planets
+            planets,
+            species
         });
 
         if (!film) {
@@ -92,7 +107,7 @@ export class FilmsService {
     }
 
     async preloadPerson(createPersonDto: CreatePersonDto): Promise<Person> {
-        const existingPerson= await this.personRepository.findOneBy({ name: createPersonDto.name });
+        const existingPerson = await this.personRepository.findOneBy({ name: createPersonDto.name });
 
         if (existingPerson) {
             return existingPerson;
@@ -109,5 +124,15 @@ export class FilmsService {
         }
 
         return this.planetRepository.create(createPlanetDto);
+    }
+
+    async preloadSpecies(createSpeciesDto: CreateSpeciesDto): Promise<Species> {
+        const existingSpecies = await this.speciesRepository.findOneBy({ name: createSpeciesDto.name });
+
+        if (existingSpecies) {
+            return existingSpecies;
+        }
+
+        return this.speciesRepository.create(createSpeciesDto);
     }
 }

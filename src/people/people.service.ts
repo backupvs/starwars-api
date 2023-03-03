@@ -4,19 +4,20 @@ import { Repository } from 'typeorm';
 import { Person } from './entities/person.entity';
 import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
-
 import { Film } from '../films/entities/film.entity';
 import { CreateFilmDto } from '../films/dto/create-film.dto';
-
 import { Planet } from '../planets/entities/planet.entity';
 import { CreatePlanetDto } from '../planets/dto/create-planet.dto';
+import { CreateSpeciesDto } from '../species/dto/create-species.dto';
+import { Species } from '../species/entities/species.entity';
 
 @Injectable()
 export class PeopleService {
     constructor(
         @InjectRepository(Person) private readonly personRepository: Repository<Person>,
         @InjectRepository(Film) private readonly filmRepository: Repository<Film>,
-        @InjectRepository(Planet) private readonly planetRepository: Repository<Planet>
+        @InjectRepository(Planet) private readonly planetRepository: Repository<Planet>,
+        @InjectRepository(Species) private readonly speciesRepository: Repository<Species>
     ) {}
 
     findAll(): Promise<Person[]> {
@@ -24,6 +25,7 @@ export class PeopleService {
             relations: {
                 films: true,
                 homeworld: true,
+                species: true
             }
         });
     }
@@ -33,7 +35,8 @@ export class PeopleService {
             where: { id },
             relations: {
                 films: true,
-                homeworld: true
+                homeworld: true,
+                species: true
             }
         })
 
@@ -48,32 +51,42 @@ export class PeopleService {
         const films = await Promise.all(
             createPersonDto.films.map(film => this.preloadFilm(film)),
         )
+        const species = await Promise.all(
+            createPersonDto.species.map(species => this.preloadSpecies(species)),
+        )
         const homeworld = await this.preloadPlanet(createPersonDto.homeworld);
 
         const newPerson = this.personRepository.create({
             ...createPersonDto,
             films,
-            homeworld
+            homeworld,
+            species
         });
 
         return this.personRepository.save(newPerson);
     }
 
     async update(id: number, updatePersonDto: UpdatePersonDto): Promise<Person> {
-        const films = 
+        const films =
             updatePersonDto.films &&
             (await Promise.all(
                 updatePersonDto.films.map(film => this.preloadFilm(film))
             ));
-        const homeworld = 
-            updatePersonDto.homeworld && 
+        const species =
+            updatePersonDto.species &&
+            (await Promise.all(
+                updatePersonDto.species.map(species => this.preloadSpecies(species))
+            ));
+        const homeworld =
+            updatePersonDto.homeworld &&
             await (this.preloadPlanet(updatePersonDto.homeworld));
 
         const person = await this.personRepository.preload({
             id,
             ...updatePersonDto,
             films,
-            homeworld
+            homeworld,
+            species
         });
 
         if (!person) {
@@ -107,5 +120,15 @@ export class PeopleService {
         }
 
         return this.planetRepository.create(createPlanetDto);
+    }
+
+    async preloadSpecies(createSpeciesDto: CreateSpeciesDto): Promise<Species> {
+        const existingSpecies = await this.speciesRepository.findOneBy({ name: createSpeciesDto.name });
+
+        if (existingSpecies) {
+            return existingSpecies;
+        }
+
+        return this.speciesRepository.create(createSpeciesDto);
     }
 }

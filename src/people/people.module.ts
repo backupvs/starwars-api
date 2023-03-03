@@ -5,13 +5,15 @@ import { PeopleService } from './people.service';
 import { Person } from './entities/person.entity';
 import { Film } from '../films/entities/film.entity';
 import { Planet } from '../planets/entities/planet.entity';
+import { Species } from '../species/entities/species.entity';
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([
             Person,
             Film,
-            Planet
+            Planet,
+            Species
         ])
     ],
     controllers: [PeopleController],

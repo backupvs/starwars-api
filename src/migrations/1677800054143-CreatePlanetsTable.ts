@@ -9,7 +9,8 @@ export class CreatePlanetsTable1677800054143 implements MigrationInterface {
                 "id" SERIAL NOT NULL, 
                 "name" character varying NOT NULL, 
                 "rotationPeriod" character varying NOT NULL, 
-                "orbitalPeriod" character varying NOT NULL, 
+                "orbitalPeriod" character varying NOT NULL,
+                "diameter character varying NOT NULL" 
                 "gravity" character varying NOT NULL, 
                 "population" character varying NOT NULL, 
                 "climate" character varying NOT NULL, 
