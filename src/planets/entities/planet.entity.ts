@@ -17,6 +17,9 @@ export class Planet {
     readonly orbitalPeriod: string;
 
     @Column()
+    readonly diameter: string
+
+    @Column()
     readonly gravity: string;
 
     @Column()

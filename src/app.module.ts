@@ -7,8 +7,8 @@ import { PlanetsModule } from './planets/planets.module';
 
 @Module({
   imports: [
-    PeopleModule,
     ConfigModule.forRoot(),
+    PeopleModule,
     DatabaseModule,
     FilmsModule,
     PlanetsModule
