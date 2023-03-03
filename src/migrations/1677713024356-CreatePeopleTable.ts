@@ -8,8 +8,8 @@ export class CreatePeopleTable1677713024356 implements MigrationInterface {
             `CREATE TABLE "people" (
                 "id" SERIAL NOT NULL, 
                 "name" character varying NOT NULL, 
-                "height" integer NOT NULL, 
-                "mass" integer NOT NULL, 
+                "height" character NOT NULL, 
+                "mass" character NOT NULL, 
                 "hairColor" character varying NOT NULL, 
                 "skinColor" character varying NOT NULL, 
                 "eyeColor" character varying NOT NULL, 

@@ -1,5 +1,6 @@
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Person } from "../../people/entities/person.entity";
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Planet } from "../../planets/entities/planet.entity";
 
 @Entity({ name: 'films' })
 export class Film {
@@ -24,9 +25,6 @@ export class Film {
     @Column('date')
     readonly releaseDate: Date;
 
-    // @Column('text', { array: true })
-    // readonly characters: string[] // People[]
-
     @ManyToMany(
         type => Person,
         person => person.films,
@@ -34,8 +32,13 @@ export class Film {
     )
     readonly characters: Person[];
 
-    @Column('text', { array: true })
-    readonly planets: string[] // Planet[]
+    @ManyToMany(
+        type => Planet,
+        planet => planet.films,
+        { cascade: ['insert'] }
+    )
+    @JoinTable()
+    readonly planets: Planet[];
 
     @Column('text', { array: true })
     readonly starships: string[] // Starship[]
