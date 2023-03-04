@@ -34,6 +34,7 @@ export class Planet {
     @Column()
     readonly surfaceWater: string;
 
+    // Planet - People
     @OneToMany(
         type => Person,
         person => person.homeworld,
@@ -41,6 +42,7 @@ export class Planet {
     )
     readonly residents: Person[];
 
+    // Films - Planets
     @ManyToMany(
         type => Film,
         film => film.planets,

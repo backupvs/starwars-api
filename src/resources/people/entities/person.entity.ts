@@ -2,6 +2,7 @@ import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColum
 import { Film } from "../../films/entities/film.entity";
 import { Planet } from "../../planets/entities/planet.entity";
 import { Species } from "../../species/entities/species.entity";
+import { Vehicle } from "../../vehicles/entities/vehicle.entity";
 
 @Entity({ name: 'people' })
 export class Person {
@@ -32,6 +33,7 @@ export class Person {
     @Column()
     readonly gender: string;
 
+    // Planet-People
     @ManyToOne(
         type => Planet,
         planet => planet.residents,
@@ -39,6 +41,7 @@ export class Person {
     )
     readonly homeworld: Planet;
 
+    // People-Films
     @ManyToMany(
         type => Film,
         film => film.characters,
@@ -47,6 +50,8 @@ export class Person {
     @JoinTable()
     readonly films: Film[];
 
+
+    // Species-People
     @ManyToMany(
         type => Species,
         species => species.people,
@@ -54,8 +59,14 @@ export class Person {
     )
     readonly species: Species[];
 
-    @Column('text', { array: true })
-    readonly vehicles: string[]; // Vehicle[]
+    // People-Vehicles
+    @ManyToMany(
+        type => Vehicle,
+        vehicles => vehicles.pilots,
+        { cascade: ['insert'] }
+    )
+    @JoinTable()
+    readonly vehicles: Vehicle[];
 
     @Column('text', { array: true })
     readonly starships: string[]; // Starship[]

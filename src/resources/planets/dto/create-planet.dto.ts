@@ -1,7 +1,7 @@
 import { Type } from "class-transformer";
 import { IsString, IsArray, ValidateNested } from "class-validator";
-import { CreateFilmDto } from "src/films/dto/create-film.dto";
-import { CreatePersonDto } from "src/people/dto/create-person.dto";
+import { CreateFilmDto } from "../../films/dto/create-film.dto";
+import { CreatePersonDto } from "../../people/dto/create-person.dto";
 
 export class CreatePlanetDto {
     @IsString()

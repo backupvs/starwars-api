@@ -3,6 +3,7 @@ import { IsString, IsDate, IsNumber, IsArray, ValidateNested } from "class-valid
 import { CreatePersonDto } from "../../people/dto/create-person.dto";
 import { CreatePlanetDto } from "../../planets/dto/create-planet.dto";
 import { CreateSpeciesDto } from "../../species/dto/create-species.dto";
+import { CreateVehicleDto } from "../../vehicles/dto/create-vehicle.dto";
 
 export class CreateFilmDto {
     @IsString()
@@ -33,11 +34,13 @@ export class CreateFilmDto {
     @Type(() => CreatePlanetDto)
     readonly planets: CreatePlanetDto[];
 
-    @IsString({ each: true })
-    readonly starships: string[]; // Starship[]
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => CreateVehicleDto)
+    readonly vehicles: CreateVehicleDto[];
 
     @IsString({ each: true })
-    readonly vehicles: string[]; // Vehicle[]
+    readonly starships: string[]; // Starship[]
 
     @IsArray()
     @ValidateNested({ each: true })

@@ -6,6 +6,7 @@ import { Film } from './entities/film.entity';
 import { Person } from '../people/entities/person.entity';
 import { Planet } from '../planets/entities/planet.entity';
 import { Species } from '../species/entities/species.entity';
+import { Vehicle } from '../vehicles/entities/vehicle.entity';
 
 @Module({
   imports: [
@@ -13,7 +14,8 @@ import { Species } from '../species/entities/species.entity';
       Film,
       Person,
       Planet,
-      Species
+      Species,
+      Vehicle
     ])
   ],
   controllers: [FilmsController],

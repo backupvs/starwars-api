@@ -36,12 +36,14 @@ export class Species {
     @Column()
     readonly language: string;
 
+    // Planet - Species
     @ManyToOne(
         type => Planet,
         { cascade: ['insert'] }
     )
     readonly homeworld: Planet;
 
+    // Species - People
     @ManyToMany(
         type => Person,
         person => person.species,
@@ -50,6 +52,7 @@ export class Species {
     @JoinTable()
     readonly people: Person[];
 
+    // Films - Species
     @ManyToMany(
         type => Film,
         film => film.species,

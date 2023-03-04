@@ -5,6 +5,8 @@ import { DatabaseModule } from './database/database.module';
 import { FilmsModule } from './resources/films/films.module';
 import { PlanetsModule } from './resources/planets/planets.module';
 import { SpeciesModule } from './resources/species/species.module';
+import { VehiclesModule } from './resources/vehicles/vehicles.module';
+import { StarshipsModule } from './resources/starships/starships.module';
 
 @Module({
   imports: [
@@ -13,7 +15,9 @@ import { SpeciesModule } from './resources/species/species.module';
     DatabaseModule,
     FilmsModule,
     PlanetsModule,
-    SpeciesModule
+    SpeciesModule,
+    VehiclesModule,
+    StarshipsModule
   ]
 })
 export class AppModule {}
