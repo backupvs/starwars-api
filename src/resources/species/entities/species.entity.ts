@@ -47,6 +47,7 @@ export class Species {
         person => person.species,
         { cascade: ['insert'] }
     )
+    @JoinTable()
     readonly people: Person[];
 
     @ManyToMany(

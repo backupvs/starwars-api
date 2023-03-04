@@ -41,12 +41,6 @@ export class Film {
     @JoinTable()
     readonly planets: Planet[];
 
-    @Column('text', { array: true })
-    readonly starships: string[] // Starship[]
-
-    @Column('text', { array: true })
-    readonly vehicles: string[] // Vehicle[]
-
     @ManyToMany(
         type => Species,
         species => species.films,
@@ -54,4 +48,10 @@ export class Film {
     )
     @JoinTable()
     readonly species: Species[];
+
+    @Column('text', { array: true })
+    readonly starships: string[]; // Starship[]
+
+    @Column('text', { array: true })
+    readonly vehicles: string[] // Vehicle[]
 }

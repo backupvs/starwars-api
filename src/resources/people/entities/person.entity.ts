@@ -52,7 +52,6 @@ export class Person {
         species => species.people,
         { cascade: ['insert'] }
     )
-    @JoinTable()
     readonly species: Species[];
 
     @Column('text', { array: true })
