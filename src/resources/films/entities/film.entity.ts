@@ -31,16 +31,14 @@ export class Film {
     // People-Films
     @ManyToMany(
         type => Person,
-        person => person.films,
-        { cascade: ['insert'] }
+        person => person.films
     )
     readonly characters: Person[];
 
     // Films-Planets
     @ManyToMany(
         type => Planet,
-        planet => planet.films,
-        { cascade: ['insert'] }
+        planet => planet.films
     )
     @JoinTable()
     readonly planets: Planet[];
@@ -48,8 +46,7 @@ export class Film {
     // Films-Species
     @ManyToMany(
         type => Species,
-        species => species.films,
-        { cascade: ['insert'] }
+        species => species.films
     )
     @JoinTable()
     readonly species: Species[];
@@ -57,8 +54,7 @@ export class Film {
     // Films-Vehicles
     @ManyToMany(
         type => Vehicle,
-        vehicles => vehicles.films,
-        { cascade: ['insert'] }
+        vehicles => vehicles.films
     )
     @JoinTable()
     readonly vehicles: Vehicle[];
@@ -66,8 +62,7 @@ export class Film {
     // Films - Starships
     @ManyToMany(
         type => Starship,
-        starships => starships.films,
-        { cascade: ['insert'] }
+        starships => starships.films
     )
     @JoinTable()
     readonly starships: Starship[];

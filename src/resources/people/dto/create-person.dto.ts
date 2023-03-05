@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty } from "class-validator";
+import { IsString, IsNotEmpty, ValidateIf } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 
 export class CreatePersonDto {
@@ -37,7 +37,8 @@ export class CreatePersonDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    readonly homeworld: string;
+    @ValidateIf((_, value) => value !== null)
+    readonly homeworld: string | null;
 
     @ApiProperty()
     @IsString({ each: true })

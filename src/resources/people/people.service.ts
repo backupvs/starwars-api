@@ -127,8 +127,7 @@ export class PeopleService {
             films?.includes(null) ||
             species?.includes(null) || 
             vehicles?.includes(null) || 
-            starships?.includes(null) || 
-            homeworld === null
+            starships?.includes(null)
         ) {
             return null
         }

@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString } from "class-validator";
+import { IsNotEmpty, IsString, ValidateIf } from "class-validator";
 
 export class CreateSpeciesDto {
     @ApiProperty()
@@ -39,8 +39,10 @@ export class CreateSpeciesDto {
     readonly language: string;
 
     @ApiProperty()
-    @IsString({ each: true })
-    readonly homeworld: string;
+    @IsNotEmpty()
+    @IsString()
+    @ValidateIf((_, value) => value !== null)
+    readonly homeworld: string | null;
 
     @ApiProperty()
     @IsString({ each: true })

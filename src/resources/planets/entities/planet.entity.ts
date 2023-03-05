@@ -37,16 +37,14 @@ export class Planet {
     // Planet - People
     @OneToMany(
         type => Person,
-        person => person.homeworld,
-        { cascade: ['insert'] }
+        person => person.homeworld
     )
     readonly residents: Person[];
 
     // Films - Planets
     @ManyToMany(
         type => Film,
-        film => film.planets,
-        { cascade: ['insert'] }
+        film => film.planets
     )
     readonly films: Film[];
 }

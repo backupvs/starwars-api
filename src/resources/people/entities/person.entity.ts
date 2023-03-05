@@ -38,7 +38,10 @@ export class Person {
     @ManyToOne(
         type => Planet,
         planet => planet.residents,
-        { cascade: ['insert'] }
+        {
+            nullable: true,
+            onDelete: "SET NULL"
+        }
     )
     readonly homeworld: Planet;
 
@@ -46,7 +49,6 @@ export class Person {
     @ManyToMany(
         type => Film,
         film => film.characters,
-        { cascade: ['insert'] }
     )
     @JoinTable()
     readonly films: Film[];
@@ -55,7 +57,6 @@ export class Person {
     @ManyToMany(
         type => Species,
         species => species.people,
-        { cascade: ['insert'] }
     )
     readonly species: Species[];
 
@@ -63,7 +64,6 @@ export class Person {
     @ManyToMany(
         type => Vehicle,
         vehicles => vehicles.pilots,
-        { cascade: ['insert'] }
     )
     @JoinTable()
     readonly vehicles: Vehicle[];
@@ -72,7 +72,6 @@ export class Person {
     @ManyToMany(
         type => Starship,
         starships => starships.pilots,
-        { cascade: ['insert'] }
     )
     @JoinTable()
     readonly starships: Starship[];

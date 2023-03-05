@@ -100,14 +100,10 @@ export class SpeciesService {
             ));
 
         const homeworld =
-        speciesDto.homeworld &&
+            speciesDto.homeworld &&
             await (this.preloadPlanet(speciesDto.homeworld));
 
-        if (
-            people?.includes(null) || 
-            films?.includes(null) || 
-            homeworld === null
-        ) {
+        if (people?.includes(null) || films?.includes(null)) {
             return null
         }
 

@@ -49,16 +49,14 @@ export class Starship {
     // Films - Starships
     @ManyToMany(
         type => Film,
-        films => films.starships,
-        { cascade: ['insert'] }
+        films => films.starships
     )
     readonly films: Film[];
 
     // People - Starships
     @ManyToMany(
         type => Person,
-        person => person.starships,
-        { cascade: ['insert'] }
+        person => person.starships
     )
     readonly pilots: Person[];
 }
