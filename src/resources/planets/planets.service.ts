@@ -1,13 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Planet } from './entities/planet.entity';
 import { CreatePlanetDto } from './dto/create-planet.dto';
 import { UpdatePlanetDto } from './dto/update-planet.dto';
 import { Person } from '../people/entities/person.entity';
-import { CreatePersonDto } from '../people/dto/create-person.dto';
 import { Film } from '../films/entities/film.entity';
-import { CreateFilmDto } from '../films/dto/create-film.dto';
 
 @Injectable()
 export class PlanetsService {
@@ -43,39 +41,31 @@ export class PlanetsService {
     }
 
     async create(createPlanetDto: CreatePlanetDto): Promise<Planet> {
-        const residents = await Promise.all(
-            createPlanetDto.residents.map(person => this.preloadPerson(person))
-        )
-        const films = await Promise.all(
-            createPlanetDto.films.map(film => this.preloadFilm(film)),
-        )
+        const relations = await this.preloadRelations(createPlanetDto);
+
+        if (relations === null) {
+            throw new BadRequestException(`Some entities does not exist`);
+        }
 
         const newPlanet = this.planetRepository.create({
             ...createPlanetDto,
-            residents,
-            films
+            ...relations
         });
 
         return this.planetRepository.save(newPlanet);
     }
 
     async update(id: number, updatePlanetDto: UpdatePlanetDto): Promise<Planet> {
-        const residents =
-            updatePlanetDto.residents &&
-            (await Promise.all(
-                updatePlanetDto.residents.map(person => this.preloadPerson(person))
-            ))
-        const films =
-            updatePlanetDto.films &&
-            (await Promise.all(
-                updatePlanetDto.films.map(film => this.preloadFilm(film)),
-            ))
+        const relations = await this.preloadRelations(updatePlanetDto);
+
+        if (relations === null) {
+            throw new BadRequestException(`Some entities does not exist`);
+        }
 
         const planet = await this.planetRepository.preload({
             id,
             ...updatePlanetDto,
-            residents,
-            films
+            ...relations
         });
 
         if (!planet) {
@@ -91,23 +81,33 @@ export class PlanetsService {
         return this.planetRepository.remove(planet);
     }
 
-    async preloadPerson(createPersonDto: CreatePersonDto): Promise<Person> {
-        const existingPerson = await this.personRepository.findOneBy({ name: createPersonDto.name });
+    // Preload relations for planets
+    async preloadRelations(planetDto: UpdatePlanetDto | CreatePlanetDto) {
+        const residents =
+            planetDto.residents &&
+            (await Promise.all(
+                planetDto.residents.map(person => this.preloadPerson(person))
+            ));
 
-        if (existingPerson) {
-            return existingPerson;
+        const films =
+            planetDto.films &&
+            (await Promise.all(
+                planetDto.films.map(film => this.preloadFilm(film))
+            ));
+
+        if (residents?.includes(null) || films?.includes(null)) {
+            return null
         }
 
-        return this.personRepository.create(createPersonDto);
+        return { residents, films };
     }
 
-    async preloadFilm(createFilmDto: CreateFilmDto): Promise<Film> {
-        const existingFilm = await this.filmRepository.findOneBy({ title: createFilmDto.title });
 
-        if (existingFilm) {
-            return existingFilm;
-        }
+    preloadPerson(name: string): Promise<Person | null> {
+        return this.personRepository.findOneBy({ name });
+    }
 
-        return this.filmRepository.create(createFilmDto);
+    preloadFilm(title: string): Promise<Film | null> {
+        return this.filmRepository.findOneBy({ title });
     }
 }

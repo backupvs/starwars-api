@@ -1,10 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsArray, IsString, ValidateNested } from "class-validator";
-import { CreateFilmDto } from "../../films/dto/create-film.dto";
-import { CreatePersonDto } from "../../people/dto/create-person.dto";
+import { CreateFilmDto } from "src/resources/films/dto/create-film.dto";
+import { CreatePersonDto } from "src/resources/people/dto/create-person.dto";
 
-export class CreateVehicleDto {
+export class CreateStarshipDto {
     @ApiProperty()
     @IsString()
     readonly name: string;
@@ -15,7 +15,7 @@ export class CreateVehicleDto {
 
     @ApiProperty()
     @IsString()
-    readonly vehicleClass: string;
+    readonly starshipClass: string;
 
     @ApiProperty()
     @IsString()
@@ -23,11 +23,11 @@ export class CreateVehicleDto {
 
     @ApiProperty()
     @IsString()
-    readonly length: string;
+    readonly costInCredits: string;
 
     @ApiProperty()
     @IsString()
-    readonly costInCredits: string;
+    readonly length: string;
 
     @ApiProperty()
     @IsString()
@@ -40,6 +40,14 @@ export class CreateVehicleDto {
     @ApiProperty()
     @IsString()
     readonly maxAtmospheringSpeed: string;
+
+    @ApiProperty()
+    @IsString()
+    readonly hyperdriveRating: string;
+
+    @ApiProperty()
+    @IsString()
+    readonly mglt: string;
 
     @ApiProperty()
     @IsString()

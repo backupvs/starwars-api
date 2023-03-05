@@ -3,6 +3,7 @@ import { Film } from "../../films/entities/film.entity";
 import { Planet } from "../../planets/entities/planet.entity";
 import { Species } from "../../species/entities/species.entity";
 import { Vehicle } from "../../vehicles/entities/vehicle.entity";
+import { Starship } from "../../starships/entities/starship.entity";
 
 @Entity({ name: 'people' })
 export class Person {
@@ -68,6 +69,12 @@ export class Person {
     @JoinTable()
     readonly vehicles: Vehicle[];
 
-    @Column('text', { array: true })
-    readonly starships: string[]; // Starship[]
+    // People - Starships
+    @ManyToMany(
+        type => Starship,
+        starships => starships.pilots,
+        { cascade: ['insert'] }
+    )
+    @JoinTable()
+    readonly starships: Starship[];
 }

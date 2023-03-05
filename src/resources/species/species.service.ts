@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreatePlanetDto } from '../planets/dto/create-planet.dto';
 import { Repository } from 'typeorm';
@@ -23,7 +23,8 @@ export class SpeciesService {
         return this.speciesRepository.find({
             relations: {
                 homeworld: true,
-                people: true
+                people: true,
+                films: true
             }
         });
     }
@@ -33,7 +34,8 @@ export class SpeciesService {
             where: { id },
             relations: {
                 homeworld: true,
-                people: true
+                people: true,
+                films: true
             }
         })
 
@@ -45,35 +47,31 @@ export class SpeciesService {
     }
 
     async create(createSpeciesDto: CreateSpeciesDto): Promise<Species> {
-        const homeworld = await this.preloadPlanet(createSpeciesDto.homeworld);
-        const people = await Promise.all(
-            createSpeciesDto.people.map(person => this.preloadPerson(person))
-        )
+        const relations = await this.preloadRelations(createSpeciesDto);
+
+        if (relations === null) {
+            throw new BadRequestException(`Some entities does not exist`);
+        }
 
         const newSpecies = this.speciesRepository.create({
             ...createSpeciesDto,
-            homeworld,
-            people
+            ...relations
         });
 
         return this.speciesRepository.save(newSpecies);
     }
 
     async update(id: number, updateSpeciesDto: UpdateSpeciesDto): Promise<Species> {
-        const homeworld =
-            updateSpeciesDto.homeworld &&
-            await (this.preloadPlanet(updateSpeciesDto.homeworld));
-        const people =
-            updateSpeciesDto.people &&
-            (await Promise.all(
-                updateSpeciesDto.people.map(person => this.preloadPerson(person))
-            ))
+        const relations = await this.preloadRelations(updateSpeciesDto);
+
+        if (relations === null) {
+            throw new BadRequestException(`Some entities does not exist`);
+        }
 
         const species = await this.speciesRepository.preload({
             id,
             ...updateSpeciesDto,
-            homeworld,
-            people
+            ...relations
         });
 
         if (!species) {
@@ -89,23 +87,44 @@ export class SpeciesService {
         return this.speciesRepository.remove(species);
     }
 
-    async preloadPlanet(createPlanetDto: CreatePlanetDto): Promise<Planet> {
-        const existingPlanet = await this.planetRepository.findOneBy({ name: createPlanetDto.name });
+    // Preload relations for species
+    async preloadRelations(speciesDto: UpdateSpeciesDto | CreateSpeciesDto) {
+        const people =
+            speciesDto.people &&
+            (await Promise.all(
+                speciesDto.people.map(person => this.preloadPerson(person))
+            ));
 
-        if (existingPlanet) {
-            return existingPlanet;
+        const films =
+            speciesDto.films &&
+            (await Promise.all(
+                speciesDto.films.map(film => this.preloadFilm(film))
+            ));
+
+        const homeworld =
+        speciesDto.homeworld &&
+            await (this.preloadPlanet(speciesDto.homeworld));
+
+        if (
+            people?.includes(null) || 
+            films?.includes(null) || 
+            homeworld === null
+        ) {
+            return null
         }
 
-        return this.planetRepository.create(createPlanetDto);
+        return { people, films, homeworld };
     }
 
-    async preloadPerson(createPersonDto: CreatePersonDto): Promise<Person> {
-        const existingPerson = await this.personRepository.findOneBy({ name: createPersonDto.name });
+    preloadPlanet(name: string): Promise<Planet | null> {
+        return this.planetRepository.findOneBy({ name });
+    }
 
-        if (existingPerson) {
-            return existingPerson;
-        }
+    preloadPerson(name: string): Promise<Person | null> {
+        return this.personRepository.findOneBy({ name });
+    }
 
-        return this.personRepository.create(createPersonDto);
+    preloadFilm(title: string): Promise<Film | null> {
+        return this.filmRepository.findOneBy({ title });
     }
 }

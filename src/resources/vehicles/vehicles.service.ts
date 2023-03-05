@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateFilmDto } from '../films/dto/create-film.dto';
@@ -43,39 +43,31 @@ export class VehiclesService {
     }
 
     async create(createVehicleDto: CreateVehicleDto): Promise<Vehicle> {
-        const films = await Promise.all(
-            createVehicleDto.films.map(film => this.preloadFilm(film)),
-        )
-        const pilots = await Promise.all(
-            createVehicleDto.pilots.map(person => this.preloadPerson(person))
-        )
+        const relations = await this.preloadRelations(createVehicleDto);
+
+        if (relations === null) {
+            throw new BadRequestException(`Some entities does not exist`);
+        }
 
         const newVehicle = this.vehicleRepository.create({
             ...createVehicleDto,
-            films,
-            pilots
+            ...relations
         });
 
         return this.vehicleRepository.save(newVehicle);
     }
 
     async update(id: number, updateVehicleDto: UpdateVehicleDto): Promise<Vehicle> {
-        const films =
-            updateVehicleDto.films &&
-            (await Promise.all(
-                updateVehicleDto.films.map(film => this.preloadFilm(film))
-            ));
-        const pilots =
-            updateVehicleDto.pilots &&
-            (await Promise.all(
-                updateVehicleDto.pilots.map(person => this.preloadPerson(person))
-            ))
+        const relations = await this.preloadRelations(updateVehicleDto);
+
+        if (relations === null) {
+            throw new BadRequestException(`Some entities does not exist`);
+        }
 
         const vehicle = await this.vehicleRepository.preload({
             id,
             ...updateVehicleDto,
-            films,
-            pilots
+            ...relations
         });
 
         if (!vehicle) {
@@ -91,23 +83,32 @@ export class VehiclesService {
         return this.vehicleRepository.remove(vehicle);
     }
 
-    async preloadFilm(createFilmDto: CreateFilmDto): Promise<Film> {
-        const existingFilm = await this.filmRepository.findOneBy({ title: createFilmDto.title });
+    // Preload relations for vehicles
+    async preloadRelations(vehicleDto: UpdateVehicleDto | CreateVehicleDto) {
+        const pilots =
+            vehicleDto.pilots &&
+            (await Promise.all(
+                vehicleDto.pilots.map(person => this.preloadPerson(person))
+            ));
 
-        if (existingFilm) {
-            return existingFilm;
+        const films =
+            vehicleDto.films &&
+            (await Promise.all(
+                vehicleDto.films.map(film => this.preloadFilm(film))
+            ));
+
+        if (pilots?.includes(null) || films?.includes(null)) {
+            return null
         }
 
-        return this.filmRepository.create(createFilmDto);
+        return { pilots, films };
     }
 
-    async preloadPerson(createPersonDto: CreatePersonDto): Promise<Person> {
-        const existingPerson = await this.personRepository.findOneBy({ name: createPersonDto.name });
+    preloadFilm(title: string): Promise<Film> {
+        return this.filmRepository.findOneBy({ title });
+    }
 
-        if (existingPerson) {
-            return existingPerson;
-        }
-
-        return this.personRepository.create(createPersonDto);
+    preloadPerson(name: string): Promise<Person> {
+        return this.personRepository.findOneBy({ name });
     }
 }

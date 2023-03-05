@@ -7,6 +7,7 @@ import { Film } from '../films/entities/film.entity';
 import { Planet } from '../planets/entities/planet.entity';
 import { Species } from '../species/entities/species.entity';
 import { Vehicle } from '../vehicles/entities/vehicle.entity';
+import { Starship } from '../starships/entities/starship.entity';
 
 @Module({
     imports: [
@@ -15,7 +16,8 @@ import { Vehicle } from '../vehicles/entities/vehicle.entity';
             Film,
             Planet,
             Species,
-            Vehicle
+            Vehicle,
+            Starship
         ])
     ],
     controllers: [PeopleController],

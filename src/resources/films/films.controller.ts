@@ -1,9 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CreateFilmDto } from './dto/create-film.dto';
 import { UpdateFilmDto } from './dto/update-film.dto';
 import { Film } from './entities/film.entity';
 import { FilmsService } from './films.service';
 
+@ApiTags('films')
 @Controller('films')
 export class FilmsController {
     constructor(private readonly filmsService: FilmsService) {}

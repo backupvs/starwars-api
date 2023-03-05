@@ -7,6 +7,7 @@ import { Film } from "../resources/films/entities/film.entity";
 import { Planet } from "../resources/planets/entities/planet.entity";
 import { Species } from "../resources/species/entities/species.entity";
 import { Vehicle } from "../resources/vehicles/entities/vehicle.entity";
+import { Starship } from "../resources/starships/entities/starship.entity";
 
 import { CreatePeopleTable1677713024356 } from "../database/migrations/1677713024356-CreatePeopleTable";
 import { CreateFilmsTable1677778830638 } from "../database/migrations/1677778830638-CreateFilmsTable";
@@ -20,6 +21,9 @@ import { CreateSpeciesPeopleRealtion1677860953122 } from "../database/migrations
 import { CreateVehiclesTable1677947217001 } from "../database/migrations/1677947217001-CreateVehiclesTable";
 import { CreateVehiclesPeopleRelation1677947958988 } from "../database/migrations/1677947958988-CreateVehiclesPeopleRelation";
 import { CreateVehiclesFilmsRelation1677948637616 } from "../database/migrations/1677948637616-CreateVehiclesFilmsRelation";
+import { CreateStarshipsTable1677969379666 } from "../database/migrations/1677969379666-CreateStarshipsTable";
+import { CreateStarshipsFilmsRelation1677970087753 } from "../database/migrations/1677970087753-CreateStarshipsFilmsRelation";
+import { CreateStarshipsPeopleRelation1677970612829 } from "../database/migrations/1677970612829-CreateStarshipsPeopleRelation";
 
 const configService = new ConfigService();
 
@@ -30,13 +34,15 @@ export default new DataSource({
     username: configService.get('POSTGRES_USER'),
     password: configService.get('POSTGRES_PASSWORD'),
     database: configService.get('POSTGRES_DB'),
-    entities: [Person, Film, Planet, Species, Vehicle],
+    entities: [Person, Film, Planet, Species, Vehicle, Starship],
     migrations: [
         CreatePeopleTable1677713024356, CreateFilmsTable1677778830638,
         CreatePeopleFilmsRelation1677786864219, CreatePlanetsTable1677800054143,
         CreatePlanetPeopleRelation1677800608083, CreateFilmsPlanetsRelation1677805421510,
         CreateSpeciesTable1677857208688, CreateSpeciesPlanetRelation1677859091241,
         CreateSpeciesPeopleRealtion1677860953122, CreateVehiclesTable1677947217001,
-        CreateVehiclesPeopleRelation1677947958988, CreateVehiclesFilmsRelation1677948637616
+        CreateVehiclesPeopleRelation1677947958988, CreateVehiclesFilmsRelation1677948637616,
+        CreateStarshipsTable1677969379666, CreateStarshipsFilmsRelation1677970087753,
+        CreateStarshipsPeopleRelation1677970612829
     ],
 })

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateFilmDto } from './dto/create-film.dto';
@@ -12,6 +12,7 @@ import { CreateSpeciesDto } from '../species/dto/create-species.dto';
 import { Species } from '../species/entities/species.entity';
 import { Vehicle } from '../vehicles/entities/vehicle.entity';
 import { CreateVehicleDto } from '../vehicles/dto/create-vehicle.dto';
+import { Starship } from '../starships/entities/starship.entity';
 
 @Injectable()
 export class FilmsService {
@@ -20,7 +21,8 @@ export class FilmsService {
         @InjectRepository(Person) private readonly personRepository: Repository<Person>,
         @InjectRepository(Planet) private readonly planetRepository: Repository<Planet>,
         @InjectRepository(Species) private readonly speciesRepository: Repository<Species>,
-        @InjectRepository(Vehicle) private readonly vehicleRepository: Repository<Vehicle>
+        @InjectRepository(Vehicle) private readonly vehicleRepository: Repository<Vehicle>,
+        @InjectRepository(Starship) private readonly starshipRepository: Repository<Starship>
     ) {}
 
     findAll(): Promise<Film[]> {
@@ -29,7 +31,8 @@ export class FilmsService {
                 characters: true,
                 planets: true,
                 species: true,
-                vehicles: true
+                vehicles: true,
+                starships: true
             }
         });
     }
@@ -41,7 +44,8 @@ export class FilmsService {
                 characters: true,
                 planets: true,
                 species: true,
-                vehicles: true
+                vehicles: true,
+                starships: true
             }
         });
 
@@ -53,59 +57,31 @@ export class FilmsService {
     }
 
     async create(createFilmDto: CreateFilmDto): Promise<Film> {
-        const characters = await Promise.all(
-            createFilmDto.characters.map(person => this.preloadPerson(person))
-        )
-        const planets = await Promise.all(
-            createFilmDto.planets.map(planet => this.preloadPlanet(planet))
-        )
-        const species = await Promise.all(
-            createFilmDto.species.map(species => this.preloadSpecies(species)),
-        )
-        const vehicles = await Promise.all(
-            createFilmDto.vehicles.map(vehicle => this.preloadVehicle(vehicle)),
-        )
+        const relations = await this.preloadRelations(createFilmDto);
+
+        if (relations === null) {
+            throw new BadRequestException(`Some entities does not exist`);
+        }
 
         const film = this.filmRepository.create({
             ...createFilmDto,
-            characters,
-            planets,
-            species,
-            vehicles
+            ...relations
         });
 
         return this.filmRepository.save(film);
     }
 
     async update(id: number, updateFilmDto: UpdateFilmDto): Promise<Film> {
-        const characters =
-            updateFilmDto.characters &&
-            (await Promise.all(
-                updateFilmDto.characters.map(person => this.preloadPerson(person))
-            ))
-        const planets =
-            updateFilmDto.planets &&
-            (await Promise.all(
-                updateFilmDto.planets.map(planet => this.preloadPlanet(planet))
-            ))
-        const species =
-            updateFilmDto.species &&
-            (await Promise.all(
-                updateFilmDto.species.map(species => this.preloadSpecies(species))
-            ));
-        const vehicles =
-            updateFilmDto.vehicles &&
-            (await Promise.all(
-                updateFilmDto.vehicles.map(vehicle => this.preloadVehicle(vehicle))
-            ));
+        const relations = await this.preloadRelations(updateFilmDto);
+
+        if (relations === null) {
+            throw new BadRequestException(`Some entities does not exist`);
+        }
 
         const film = await this.filmRepository.preload({
             id,
             ...updateFilmDto,
-            characters,
-            planets,
-            species,
-            vehicles
+            ...relations
         });
 
         if (!film) {
@@ -115,49 +91,74 @@ export class FilmsService {
         return this.filmRepository.save(film);
     }
 
+    // Preload relations for films
+    async preloadRelations(filmDto: UpdateFilmDto | CreateFilmDto) {
+        const characters =
+            filmDto.characters &&
+            (await Promise.all(
+                filmDto.characters.map(person => this.preloadPerson(person))
+            ));
+
+        const species =
+            filmDto.species &&
+            (await Promise.all(
+                filmDto.species.map(species => this.preloadSpecies(species))
+            ));
+
+        const planets =
+            filmDto.planets &&
+            (await Promise.all(
+                filmDto.planets.map(planet => this.preloadPlanet(planet))
+            ));
+
+        const vehicles =
+            filmDto.vehicles &&
+            (await Promise.all(
+                filmDto.vehicles.map(vehicle => this.preloadVehicle(vehicle))
+            ));
+
+        const starships =
+            filmDto.starships &&
+            (await Promise.all(
+                filmDto.starships.map(starship => this.preloadStarship(starship))
+            ));
+
+        if (
+            characters?.includes(null) || 
+            species?.includes(null) || 
+            vehicles?.includes(null) || 
+            starships?.includes(null) || 
+            planets?.includes(null)
+        ) {
+            return null
+        }
+
+        return { characters, species, vehicles, starships, planets };
+    }
+
     async remove(id: number): Promise<Film> {
         const film = await this.findOne(id);
 
         return this.filmRepository.remove(film);
     }
 
-    async preloadPerson(createPersonDto: CreatePersonDto): Promise<Person> {
-        const existingPerson = await this.personRepository.findOneBy({ name: createPersonDto.name });
-
-        if (existingPerson) {
-            return existingPerson;
-        }
-
-        return this.personRepository.create(createPersonDto);
+    async preloadPerson(name: string): Promise<Person | null> {
+        return this.personRepository.findOneBy({ name });
     }
 
-    async preloadPlanet(createPlanetDto: CreatePlanetDto): Promise<Planet> {
-        const existingPlanet = await this.planetRepository.findOneBy({ name: createPlanetDto.name });
-
-        if (existingPlanet) {
-            return existingPlanet;
-        }
-
-        return this.planetRepository.create(createPlanetDto);
+    preloadPlanet(name: string): Promise<Planet | null> {
+        return this.planetRepository.findOneBy({ name });
     }
 
-    async preloadSpecies(createSpeciesDto: CreateSpeciesDto): Promise<Species> {
-        const existingSpecies = await this.speciesRepository.findOneBy({ name: createSpeciesDto.name });
-
-        if (existingSpecies) {
-            return existingSpecies;
-        }
-
-        return this.speciesRepository.create(createSpeciesDto);
+    preloadSpecies(name: string): Promise<Species | null> {
+        return this.speciesRepository.findOneBy({ name });
     }
 
-    async preloadVehicle(createVehicleDto: CreateVehicleDto): Promise<Vehicle> {
-        const existingVehicle = await this.vehicleRepository.findOneBy({ name: createVehicleDto.name });
+    preloadVehicle(name: string): Promise<Vehicle | null> {
+        return this.vehicleRepository.findOneBy({ name });
+    }
 
-        if (existingVehicle) {
-            return existingVehicle;
-        }
-
-        return this.vehicleRepository.create(createVehicleDto);
+    preloadStarship(name: string): Promise<Starship | null> {
+        return this.starshipRepository.findOneBy({ name });
     }
 }
