@@ -25,6 +25,7 @@ import { CreateStarshipsTable1677969379666 } from "../database/migrations/167796
 import { CreateStarshipsFilmsRelation1677970087753 } from "../database/migrations/1677970087753-CreateStarshipsFilmsRelation";
 import { CreateStarshipsPeopleRelation1677970612829 } from "../database/migrations/1677970612829-CreateStarshipsPeopleRelation";
 import { MakeHomeworldNullable1678036781851 } from "../database/migrations/1678036781851-MakeHomeworldNullable";
+import { MakeUniqueColumns1678045486396 } from "../database/migrations/1678045486396-MakeUniqueColumns";
 
 const configService = new ConfigService();
 
@@ -44,6 +45,7 @@ export default new DataSource({
         CreateSpeciesPeopleRealtion1677860953122, CreateVehiclesTable1677947217001,
         CreateVehiclesPeopleRelation1677947958988, CreateVehiclesFilmsRelation1677948637616,
         CreateStarshipsTable1677969379666, CreateStarshipsFilmsRelation1677970087753,
-        CreateStarshipsPeopleRelation1677970612829, MakeHomeworldNullable1678036781851
+        CreateStarshipsPeopleRelation1677970612829, MakeHomeworldNullable1678036781851,
+        MakeUniqueColumns1678045486396
     ],
 })

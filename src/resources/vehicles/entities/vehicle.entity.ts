@@ -7,7 +7,7 @@ export class Vehicle {
     @PrimaryGeneratedColumn()
     readonly id: number;
 
-    @Column()
+    @Column({ unique: true })
     readonly name: string;
 
     @Column()

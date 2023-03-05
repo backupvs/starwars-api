@@ -7,7 +7,7 @@ export class Planet {
     @PrimaryGeneratedColumn()
     readonly id: number;
 
-    @Column()
+    @Column({ unique: true })
     readonly name: string;
 
     @Column()

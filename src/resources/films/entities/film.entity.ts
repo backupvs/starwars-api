@@ -10,7 +10,7 @@ export class Film {
     @PrimaryGeneratedColumn()
     readonly id: number;
 
-    @Column()
+    @Column({ unique: true })
     readonly title: string;
 
     @Column()
