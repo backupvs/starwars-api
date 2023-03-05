@@ -1,9 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateFilmDto } from '../films/dto/create-film.dto';
 import { Film } from '../films/entities/film.entity';
-import { CreatePersonDto } from '../people/dto/create-person.dto';
 import { Person } from '../people/entities/person.entity';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';

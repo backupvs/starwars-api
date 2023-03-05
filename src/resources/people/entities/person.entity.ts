@@ -51,7 +51,6 @@ export class Person {
     @JoinTable()
     readonly films: Film[];
 
-
     // Species-People
     @ManyToMany(
         type => Species,

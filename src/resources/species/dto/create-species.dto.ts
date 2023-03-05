@@ -1,9 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Type } from "class-transformer";
-import { IsArray, IsString, ValidateNested } from "class-validator";
-import { CreateFilmDto } from "../../films/dto/create-film.dto";
-import { CreatePersonDto } from "../../people/dto/create-person.dto";
-import { CreatePlanetDto } from "../../planets/dto/create-planet.dto";
+import { IsString } from "class-validator";
 
 export class CreateSpeciesDto {
     @ApiProperty()
@@ -42,28 +38,14 @@ export class CreateSpeciesDto {
     @IsString()
     readonly language: string;
 
-    // @ApiProperty()
-    // @ValidateNested()
-    // @Type(() => CreatePlanetDto)
-    // readonly homeworld: CreatePlanetDto;
     @ApiProperty()
     @IsString({ each: true })
     readonly homeworld: string;
 
-    // @ApiProperty()
-    // @IsArray()
-    // @ValidateNested({ each: true })
-    // @Type(() => CreatePersonDto)
-    // readonly people: CreatePersonDto[];
     @ApiProperty()
     @IsString({ each: true })
     readonly people: string[];
 
-    // @ApiProperty()
-    // @IsArray()
-    // @ValidateNested({ each: true })
-    // @Type(() => CreateFilmDto)
-    // readonly films: CreateFilmDto[];
     @ApiProperty()
     @IsString({ each: true })
     readonly films: string[];

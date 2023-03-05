@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreatePlanetDto } from '../planets/dto/create-planet.dto';
 import { Repository } from 'typeorm';
 import { Film } from '../films/entities/film.entity';
 import { Person } from '../people/entities/person.entity';
@@ -8,7 +7,6 @@ import { Planet } from '../planets/entities/planet.entity';
 import { CreateSpeciesDto } from './dto/create-species.dto';
 import { Species } from './entities/species.entity';
 import { UpdateSpeciesDto } from './dto/update-species.dto';
-import { CreatePersonDto } from '../people/dto/create-person.dto';
 
 @Injectable()
 export class SpeciesService {

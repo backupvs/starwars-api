@@ -5,13 +5,9 @@ import { CreateFilmDto } from './dto/create-film.dto';
 import { UpdateFilmDto } from './dto/update-film.dto';
 import { Film } from './entities/film.entity';
 import { Person } from '../people/entities/person.entity';
-import { CreatePersonDto } from '../people/dto/create-person.dto';
 import { Planet } from '../planets/entities/planet.entity';
-import { CreatePlanetDto } from '../planets/dto/create-planet.dto';
-import { CreateSpeciesDto } from '../species/dto/create-species.dto';
 import { Species } from '../species/entities/species.entity';
 import { Vehicle } from '../vehicles/entities/vehicle.entity';
-import { CreateVehicleDto } from '../vehicles/dto/create-vehicle.dto';
 import { Starship } from '../starships/entities/starship.entity';
 
 @Injectable()

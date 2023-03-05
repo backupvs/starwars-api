@@ -1,7 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString } from "class-validator";
 
-
 export class CreatePlanetDto {
     @ApiProperty()
     @IsString()
@@ -39,20 +38,10 @@ export class CreatePlanetDto {
     @IsString()
     readonly surfaceWater: string;
 
-    // @ApiProperty()
-    // @IsArray()
-    // @ValidateNested({ each: true })
-    // @Type(() => CreatePersonDto)
-    // readonly residents: CreatePersonDto[];
     @ApiProperty()
     @IsString({ each: true })
     readonly residents: string[];
 
-    // @ApiProperty()
-    // @IsArray()
-    // @ValidateNested({ each: true })
-    // @Type(() => CreateFilmDto)
-    // readonly films: CreateFilmDto[];
     @ApiProperty()
     @IsString({ each: true })
     readonly films: string[];
