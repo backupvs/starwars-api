@@ -3,6 +3,7 @@ import { VehiclesService } from './vehicles.service';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { IdValidationPipe } from '../../common/pipes/id-validation.pipe';
 
 @ApiTags('vehicles')
 @Controller('vehicles')
@@ -15,7 +16,7 @@ export class VehiclesController {
     }
 
     @Get(':id')
-    findOne(@Param('id') id: string) {
+    findOne(@Param('id', IdValidationPipe) id: string) {
         return this.vehiclesService.findOne(Number(id));
     }
 
@@ -25,12 +26,12 @@ export class VehiclesController {
     }
 
     @Patch(':id')
-    update(@Param('id') id: string, @Body() updateVehicleDto: UpdateVehicleDto) {
+    update(@Param('id', IdValidationPipe) id: string, @Body() updateVehicleDto: UpdateVehicleDto) {
         return this.vehiclesService.update(Number(id), updateVehicleDto);
     }
 
     @Delete(':id')
-    remove(@Param('id') id: string) {
+    remove(@Param('id', IdValidationPipe) id: string) {
         return this.vehiclesService.remove(Number(id));
     }
 }

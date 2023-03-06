@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { IdValidationPipe } from '../../common/pipes/id-validation.pipe';
 import { CreateFilmDto } from './dto/create-film.dto';
 import { UpdateFilmDto } from './dto/update-film.dto';
 import { Film } from './entities/film.entity';
@@ -16,7 +17,7 @@ export class FilmsController {
     }
 
     @Get(':id')
-    async findOne(@Param('id') id: string): Promise<Film> {
+    async findOne(@Param('id', IdValidationPipe) id: string): Promise<Film> {
         return this.filmsService.findOne(Number(id));
     }
 
@@ -26,12 +27,12 @@ export class FilmsController {
     }
 
     @Patch(':id')
-    async update(@Param('id') id: string, @Body() updateFilmDto: UpdateFilmDto): Promise<Film> {
+    async update(@Param('id', IdValidationPipe) id: string, @Body() updateFilmDto: UpdateFilmDto): Promise<Film> {
         return this.filmsService.update(Number(id), updateFilmDto);
     }
 
     @Delete(':id')
-    async remove(@Param('id') id: string): Promise<Film> {
+    async remove(@Param('id', IdValidationPipe) id: string): Promise<Film> {
         return this.filmsService.remove(Number(id));
     }
 }

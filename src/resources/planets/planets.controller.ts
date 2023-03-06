@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { IdValidationPipe } from '../../common/pipes/id-validation.pipe';
 import { CreatePlanetDto } from './dto/create-planet.dto';
 import { UpdatePlanetDto } from './dto/update-planet.dto';
 import { PlanetsService } from './planets.service';
@@ -15,7 +16,7 @@ export class PlanetsController {
     }
 
     @Get(':id')
-    findOne(@Param('id') id: string) {
+    findOne(@Param('id', IdValidationPipe) id: string) {
         return this.planetsService.findOne(Number(id));
     }
 
@@ -25,12 +26,12 @@ export class PlanetsController {
     }
 
     @Patch(':id')
-    update(@Param('id') id: string, @Body() updatePlanetDto: UpdatePlanetDto) {
+    update(@Param('id', IdValidationPipe) id: string, @Body() updatePlanetDto: UpdatePlanetDto) {
         return this.planetsService.update(Number(id), updatePlanetDto);
     }
 
     @Delete(':id')
-    remove(@Param('id') id: string) {
+    remove(@Param('id', IdValidationPipe) id: string) {
         return this.planetsService.remove(Number(id));
     }
 }

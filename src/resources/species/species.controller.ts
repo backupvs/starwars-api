@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { IdValidationPipe } from '../../common/pipes/id-validation.pipe';
 import { CreateSpeciesDto } from './dto/create-species.dto';
 import { UpdateSpeciesDto } from './dto/update-species.dto';
 import { SpeciesService } from './species.service';
@@ -15,7 +16,7 @@ export class SpeciesController {
     }
 
     @Get(':id')
-    findOne(@Param('id') id: string) {
+    findOne(@Param('id', IdValidationPipe) id: string) {
         return this.speciesService.findOne(Number(id));
     }
 
@@ -25,12 +26,12 @@ export class SpeciesController {
     }
 
     @Patch(':id')
-    update(@Param('id') id: string, @Body() updatePersonDto: UpdateSpeciesDto) {
+    update(@Param('id', IdValidationPipe) id: string, @Body() updatePersonDto: UpdateSpeciesDto) {
         return this.speciesService.update(Number(id), updatePersonDto);
     }
 
     @Delete(':id')
-    remove(@Param('id') id: string) {
+    remove(@Param('id', IdValidationPipe) id: string) {
         return this.speciesService.remove(Number(id));
     }
 }

@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { IdValidationPipe } from '../../common/pipes/id-validation.pipe';
 import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
 import { PeopleService } from './people.service';
@@ -15,7 +16,7 @@ export class PeopleController {
     }
 
     @Get(':id')
-    findOne(@Param('id') id: string) {
+    findOne(@Param('id', IdValidationPipe) id: string) {
         return this.peopleService.findOne(Number(id));
     }
 
@@ -25,12 +26,12 @@ export class PeopleController {
     }
 
     @Patch(':id')
-    update(@Param('id') id: string, @Body() updatePersonDto: UpdatePersonDto) {
+    update(@Param('id', IdValidationPipe) id: string, @Body() updatePersonDto: UpdatePersonDto) {
         return this.peopleService.update(Number(id), updatePersonDto);
     }
 
     @Delete(':id')
-    remove(@Param('id') id: string) {
+    remove(@Param('id', IdValidationPipe) id: string) {
         return this.peopleService.remove(Number(id));
     }
 }

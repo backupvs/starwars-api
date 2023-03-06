@@ -3,6 +3,7 @@ import { StarshipsService } from './starships.service';
 import { CreateStarshipDto } from './dto/create-starship.dto';
 import { UpdateStarshipDto } from './dto/update-starship.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { IdValidationPipe } from '../../common/pipes/id-validation.pipe';
 
 @ApiTags('starships')
 @Controller('starships')
@@ -15,7 +16,7 @@ export class StarshipsController {
     }
 
     @Get(':id')
-    findOne(@Param('id') id: string) {
+    findOne(@Param('id', IdValidationPipe) id: string) {
         return this.starshipsService.findOne(Number(id));
     }
 
@@ -25,12 +26,12 @@ export class StarshipsController {
     }
 
     @Patch(':id')
-    update(@Param('id') id: string, @Body() updateStarshipDto: UpdateStarshipDto) {
+    update(@Param('id', IdValidationPipe) id: string, @Body() updateStarshipDto: UpdateStarshipDto) {
         return this.starshipsService.update(Number(id), updateStarshipDto);
     }
 
     @Delete(':id')
-    remove(@Param('id') id: string) {
+    remove(@Param('id', IdValidationPipe) id: string) {
         return this.starshipsService.remove(Number(id));
     }
 }
