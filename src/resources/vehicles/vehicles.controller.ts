@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { VehiclesService } from './vehicles.service';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { IdValidationPipe } from '../../common/pipes/id-validation.pipe';
+import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 
 @ApiTags('vehicles')
 @Controller('vehicles')
@@ -11,8 +12,8 @@ export class VehiclesController {
     constructor(private readonly vehiclesService: VehiclesService) {}
 
     @Get()
-    findAll() {
-        return this.vehiclesService.findAll();
+    findAll(@Query() paginationQuery: PaginationQueryDto) {
+        return this.vehiclesService.findAll(paginationQuery);
     }
 
     @Get(':id')

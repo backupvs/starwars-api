@@ -1,5 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 import { IdValidationPipe } from '../../common/pipes/id-validation.pipe';
 import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
@@ -11,8 +12,8 @@ export class PeopleController {
     constructor(private readonly peopleService: PeopleService) {}
 
     @Get()
-    findAll() {
-        return this.peopleService.findAll();
+    findAll(@Query() paginationQuery: PaginationQueryDto) {
+        return this.peopleService.findAll(paginationQuery);
     }
 
     @Get(':id')

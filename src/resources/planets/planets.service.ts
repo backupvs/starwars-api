@@ -6,6 +6,7 @@ import { CreatePlanetDto } from './dto/create-planet.dto';
 import { UpdatePlanetDto } from './dto/update-planet.dto';
 import { Person } from '../people/entities/person.entity';
 import { Film } from '../films/entities/film.entity';
+import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 
 @Injectable()
 export class PlanetsService {
@@ -15,12 +16,14 @@ export class PlanetsService {
         @InjectRepository(Film) private readonly filmRepository: Repository<Film>
     ) {}
 
-    findAll(): Promise<Planet[]> {
+    findAll(paginationQuery: PaginationQueryDto): Promise<Planet[]> {
         return this.planetRepository.find({
             relations: {
                 residents: true,
                 films: true
-            }
+            },
+            skip: paginationQuery.offset,
+            take: paginationQuery.limit
         });
     }
 

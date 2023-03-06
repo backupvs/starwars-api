@@ -1,5 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 import { IdValidationPipe } from '../../common/pipes/id-validation.pipe';
 import { CreatePlanetDto } from './dto/create-planet.dto';
 import { UpdatePlanetDto } from './dto/update-planet.dto';
@@ -11,8 +12,8 @@ export class PlanetsController {
     constructor(private readonly planetsService: PlanetsService) {}
 
     @Get()
-    findAll() {
-        return this.planetsService.findAll();
+    findAll(@Query() paginationQuery: PaginationQueryDto) {
+        return this.planetsService.findAll(paginationQuery);
     }
 
     @Get(':id')

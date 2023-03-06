@@ -7,6 +7,7 @@ import { Planet } from '../planets/entities/planet.entity';
 import { CreateSpeciesDto } from './dto/create-species.dto';
 import { Species } from './entities/species.entity';
 import { UpdateSpeciesDto } from './dto/update-species.dto';
+import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 
 @Injectable()
 export class SpeciesService {
@@ -17,13 +18,15 @@ export class SpeciesService {
         @InjectRepository(Planet) private readonly planetRepository: Repository<Planet>
     ) {}
 
-    findAll(): Promise<Species[]> {
+    findAll(paginationQuery: PaginationQueryDto): Promise<Species[]> {
         return this.speciesRepository.find({
             relations: {
                 homeworld: true,
                 people: true,
                 films: true
-            }
+            },
+            skip: paginationQuery.offset,
+            take: paginationQuery.limit
         });
     }
 

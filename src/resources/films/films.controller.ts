@@ -1,5 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 import { IdValidationPipe } from '../../common/pipes/id-validation.pipe';
 import { CreateFilmDto } from './dto/create-film.dto';
 import { UpdateFilmDto } from './dto/update-film.dto';
@@ -12,8 +13,8 @@ export class FilmsController {
     constructor(private readonly filmsService: FilmsService) {}
 
     @Get()
-    findAll(): Promise<Film[]> {
-        return this.filmsService.findAll();
+    findAll(@Query() paginationQuery: PaginationQueryDto): Promise<Film[]> {
+        return this.filmsService.findAll(paginationQuery);
     }
 
     @Get(':id')

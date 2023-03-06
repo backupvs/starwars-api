@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 import { Repository } from 'typeorm';
 import { Film } from '../films/entities/film.entity';
 import { Person } from '../people/entities/person.entity';
@@ -15,12 +16,14 @@ export class StarshipsService {
         @InjectRepository(Film) private readonly filmRepository: Repository<Film>,
     ) {}
 
-    findAll(): Promise<Starship[]> {
+    findAll(paginationQuery: PaginationQueryDto): Promise<Starship[]> {
         return this.starshipRepository.find({
             relations: {
                 films: true,
                 pilots: true
-            }
+            },
+            skip: paginationQuery.offset,
+            take: paginationQuery.limit
         });
     }
 

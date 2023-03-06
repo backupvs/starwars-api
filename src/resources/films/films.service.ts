@@ -9,6 +9,7 @@ import { Planet } from '../planets/entities/planet.entity';
 import { Species } from '../species/entities/species.entity';
 import { Vehicle } from '../vehicles/entities/vehicle.entity';
 import { Starship } from '../starships/entities/starship.entity';
+import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 
 @Injectable()
 export class FilmsService {
@@ -21,7 +22,7 @@ export class FilmsService {
         @InjectRepository(Starship) private readonly starshipRepository: Repository<Starship>
     ) {}
 
-    findAll(): Promise<Film[]> {
+    findAll(paginationQuery: PaginationQueryDto): Promise<Film[]> {
         return this.filmRepository.find({
             relations: {
                 characters: true,
@@ -29,7 +30,9 @@ export class FilmsService {
                 species: true,
                 vehicles: true,
                 starships: true
-            }
+            },
+            skip: paginationQuery.offset,
+            take: paginationQuery.limit
         });
     }
 

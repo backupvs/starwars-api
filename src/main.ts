@@ -4,12 +4,14 @@ import { AppModule } from "./app.module";
 import { ValidationPipe } from "@nestjs/common";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { UniqueConstraintExceptionFilter } from "./common/filters/unique-constraint-exception.filter";
+import { WrapResponseInterceptor } from "./common/interceptors/wrap-response.interceptor";
 
 const PORT = process.env.PORT || 3000;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // Global pipes
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -21,7 +23,11 @@ async function bootstrap() {
     })
   );
 
-  app.useGlobalFilters(new UniqueConstraintExceptionFilter)
+  // Global filters
+  app.useGlobalFilters(new UniqueConstraintExceptionFilter())
+
+  // Global interceptors
+  app.useGlobalInterceptors(new WrapResponseInterceptor());
 
   const options = new DocumentBuilder()
     .setTitle('Star Wars API')

@@ -1,5 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 import { IdValidationPipe } from '../../common/pipes/id-validation.pipe';
 import { CreateSpeciesDto } from './dto/create-species.dto';
 import { UpdateSpeciesDto } from './dto/update-species.dto';
@@ -11,8 +12,8 @@ export class SpeciesController {
     constructor(private readonly speciesService: SpeciesService) {}
 
     @Get()
-    findAll() {
-        return this.speciesService.findAll();
+    findAll(@Query() paginationQuery: PaginationQueryDto) {
+        return this.speciesService.findAll(paginationQuery);
     }
 
     @Get(':id')
