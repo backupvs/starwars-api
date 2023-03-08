@@ -21,6 +21,7 @@ import { Starship } from '../starships/entities/starship.entity';
         ])
     ],
     controllers: [PeopleController],
-    providers: [PeopleService]
+    providers: [PeopleService],
+    exports: [PeopleService]
 })
 export class PeopleModule {}

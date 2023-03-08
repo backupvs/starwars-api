@@ -21,6 +21,7 @@ import { Starship } from '../starships/entities/starship.entity';
     ])
   ],
   controllers: [FilmsController],
-  providers: [FilmsService]
+  providers: [FilmsService],
+  exports: [FilmsService]
 })
 export class FilmsModule {}

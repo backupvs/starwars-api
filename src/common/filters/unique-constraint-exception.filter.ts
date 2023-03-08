@@ -1,6 +1,6 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus } from '@nestjs/common';
 import { Response } from 'express';
-import { PostgresErrorCode } from 'src/database/postgressErrorCode.enum';
+import { PostgresErrorCode } from '../../database/error_codes/postgressErrorCode.enum';
 import { QueryFailedError } from 'typeorm';
 
 @Catch(QueryFailedError)

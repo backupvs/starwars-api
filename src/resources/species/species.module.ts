@@ -17,6 +17,7 @@ import { SpeciesService } from './species.service';
         ])
     ],
     controllers: [SpeciesController],
-    providers: [SpeciesService]
+    providers: [SpeciesService],
+    exports: [SpeciesService]
 })
 export class SpeciesModule {}

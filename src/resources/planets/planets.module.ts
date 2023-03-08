@@ -14,6 +14,7 @@ import { Film } from '../films/entities/film.entity';
             Film
         ])],
     controllers: [PlanetsController],
-    providers: [PlanetsService]
+    providers: [PlanetsService],
+    exports: [PlanetsService]
 })
 export class PlanetsModule {}

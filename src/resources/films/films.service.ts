@@ -32,7 +32,8 @@ export class FilmsService {
                 starships: true
             },
             skip: paginationQuery.offset,
-            take: paginationQuery.limit
+            take: paginationQuery.limit,
+            relationLoadStrategy: 'query'
         });
     }
 
