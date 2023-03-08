@@ -1,31 +1,13 @@
 import "dotenv/config";
 import { ConfigService } from "@nestjs/config";
 import { DataSource } from "typeorm";
-
 import { Person } from "../resources/people/entities/person.entity";
 import { Film } from "../resources/films/entities/film.entity";
 import { Planet } from "../resources/planets/entities/planet.entity";
 import { Species } from "../resources/species/entities/species.entity";
 import { Vehicle } from "../resources/vehicles/entities/vehicle.entity";
 import { Starship } from "../resources/starships/entities/starship.entity";
-
-import { CreatePeopleTable1677713024356 } from "../database/migrations/1677713024356-CreatePeopleTable";
-import { CreateFilmsTable1677778830638 } from "../database/migrations/1677778830638-CreateFilmsTable";
-import { CreatePeopleFilmsRelation1677786864219 } from "../database/migrations/1677786864219-CreatePeopleFilmsRelation";
-import { CreatePlanetsTable1677800054143 } from "../database/migrations/1677800054143-CreatePlanetsTable";
-import { CreatePlanetPeopleRelation1677800608083 } from "../database/migrations/1677800608083-CreatePlanetPeopleRelation";
-import { CreateFilmsPlanetsRelation1677805421510 } from "../database/migrations/1677805421510-CreateFilmsPlanetsRelation";
-import { CreateSpeciesTable1677857208688 } from "../database/migrations/1677857208688-CreateSpeciesTable";
-import { CreateSpeciesPlanetRelation1677859091241 } from "../database/migrations/1677859091241-CreateSpeciesPlanetRelation";
-import { CreateSpeciesPeopleRealtion1677860953122 } from "../database/migrations/1677860953122-CreateSpeciesPeopleRealtion";
-import { CreateVehiclesTable1677947217001 } from "../database/migrations/1677947217001-CreateVehiclesTable";
-import { CreateVehiclesPeopleRelation1677947958988 } from "../database/migrations/1677947958988-CreateVehiclesPeopleRelation";
-import { CreateVehiclesFilmsRelation1677948637616 } from "../database/migrations/1677948637616-CreateVehiclesFilmsRelation";
-import { CreateStarshipsTable1677969379666 } from "../database/migrations/1677969379666-CreateStarshipsTable";
-import { CreateStarshipsFilmsRelation1677970087753 } from "../database/migrations/1677970087753-CreateStarshipsFilmsRelation";
-import { CreateStarshipsPeopleRelation1677970612829 } from "../database/migrations/1677970612829-CreateStarshipsPeopleRelation";
-import { MakeHomeworldNullable1678036781851 } from "../database/migrations/1678036781851-MakeHomeworldNullable";
-import { MakeUniqueColumns1678045486396 } from "../database/migrations/1678045486396-MakeUniqueColumns";
+import { CreateTables1678291193882 } from "../database/migrations/1678291193882-CreateTables";
 
 const configService = new ConfigService();
 
@@ -37,15 +19,5 @@ export default new DataSource({
     password: configService.get('POSTGRES_PASSWORD'),
     database: configService.get('POSTGRES_DB'),
     entities: [Person, Film, Planet, Species, Vehicle, Starship],
-    migrations: [
-        CreatePeopleTable1677713024356, CreateFilmsTable1677778830638,
-        CreatePeopleFilmsRelation1677786864219, CreatePlanetsTable1677800054143,
-        CreatePlanetPeopleRelation1677800608083, CreateFilmsPlanetsRelation1677805421510,
-        CreateSpeciesTable1677857208688, CreateSpeciesPlanetRelation1677859091241,
-        CreateSpeciesPeopleRealtion1677860953122, CreateVehiclesTable1677947217001,
-        CreateVehiclesPeopleRelation1677947958988, CreateVehiclesFilmsRelation1677948637616,
-        CreateStarshipsTable1677969379666, CreateStarshipsFilmsRelation1677970087753,
-        CreateStarshipsPeopleRelation1677970612829, MakeHomeworldNullable1678036781851,
-        MakeUniqueColumns1678045486396
-    ],
+    migrations: [CreateTables1678291193882],
 })
