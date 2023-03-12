@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SeederService } from './seeder.service';
+import { HttpModule } from '@nestjs/axios';
 import { Film } from '../../resources/films/entities/film.entity';
 import { Person } from '../../resources/people/entities/person.entity';
 import { Planet } from '../../resources/planets/entities/planet.entity';
@@ -13,14 +14,7 @@ import { PlanetsModule } from '../../resources/planets/planets.module';
 import { SpeciesModule } from '../../resources/species/species.module';
 import { StarshipsModule } from '../../resources/starships/starships.module';
 import { VehiclesModule } from '../../resources/vehicles/vehicles.module';
-import { PeopleService } from '../../resources/people/people.service';
-import { FilmsService } from '../../resources/films/films.service';
-import { PlanetsService } from '../../resources/planets/planets.service';
-import { SpeciesService } from '../../resources/species/species.service';
-import { StarshipsService } from '../../resources/starships/starships.service';
-import { VehiclesService } from '../../resources/vehicles/vehicles.service';
-import { HttpModule } from '@nestjs/axios';
-import { SeedCommand } from './seed.command';
+import { SeedCommand } from '../commands/seed.command';
 
 @Module({
     imports: [
@@ -42,13 +36,7 @@ import { SeedCommand } from './seed.command';
     ],
     providers: [
         SeederService,
-        PeopleService,
-        FilmsService,
-        PlanetsService,
-        SpeciesService,
-        StarshipsService,
-        VehiclesService,
-        SeedCommand,
+        SeedCommand
     ]
 })
 export class SeederModule {}

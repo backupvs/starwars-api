@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Command } from 'nestjs-command';
-import { SeederService } from './seeder.service';
+import { SeederService } from '../seeder/seeder.service';
 
 @Injectable()
 export class SeedCommand {

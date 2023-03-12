@@ -5,7 +5,6 @@ import { ValidationPipe } from "@nestjs/common";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { UniqueConstraintExceptionFilter } from "./common/filters/unique-constraint-exception.filter";
 import { WrapResponseInterceptor } from "./common/interceptors/wrap-response.interceptor";
-import { SeederService } from "./database/seeder/seeder.service";
 
 const PORT = process.env.PORT || 3000;
 

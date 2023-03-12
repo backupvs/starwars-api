@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Person } from '../people/entities/person.entity';
 import { Film } from '../films/entities/film.entity';
 import { Vehicle } from './entities/vehicle.entity';
+import { Image } from '../../images/entities/image.entity';
+import { ImagesModule } from '../../images/images.module';
 
 @Module({
   imports: [
@@ -12,9 +14,11 @@ import { Vehicle } from './entities/vehicle.entity';
       [
         Vehicle,
         Person,
-        Film
+        Film,
+        Image
       ]
-    )
+    ),
+    ImagesModule
   ],
   controllers: [VehiclesController],
   providers: [VehiclesService],

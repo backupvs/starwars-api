@@ -1,5 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
+import { ImagesService } from '../../images/images.service';
 import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 import { IdValidationPipe } from '../../common/pipes/id-validation.pipe';
 import { CreateFilmDto } from './dto/create-film.dto';
@@ -10,7 +12,10 @@ import { FilmsService } from './films.service';
 @ApiTags('films')
 @Controller('films')
 export class FilmsController {
-    constructor(private readonly filmsService: FilmsService) {}
+    constructor(
+        private readonly filmsService: FilmsService,
+        private readonly imagesService: ImagesService
+    ) {}
 
     @Get()
     findAll(@Query() paginationQuery: PaginationQueryDto): Promise<Film[]> {
@@ -35,5 +40,22 @@ export class FilmsController {
     @Delete(':id')
     async remove(@Param('id', IdValidationPipe) id: string): Promise<Film> {
         return this.filmsService.remove(Number(id));
+    }
+
+    @UseInterceptors(FileInterceptor('image-file'))
+    @Post(':id/add-image')
+    addImage(
+        @Param('id', IdValidationPipe) id: string,
+        @UploadedFile() imageFile: Express.Multer.File
+    ) {
+        return this.filmsService.addImage(Number(id), imageFile);
+    }
+
+    @Delete(':id/remove-image')
+    removeImage(
+        @Param('id', IdValidationPipe) id: string,
+        @Query('id', IdValidationPipe) imageId: string
+    ) {
+        return this.imagesService.remove(Number(imageId));
     }
 }

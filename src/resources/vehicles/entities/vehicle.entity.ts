@@ -1,6 +1,7 @@
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Person } from "../../people/entities/person.entity";
 import { Film } from "../../films/entities/film.entity";
+import { Image } from "../../../images/entities/image.entity";
 
 @Entity({ name: 'vehicles' })
 export class Vehicle {
@@ -55,4 +56,12 @@ export class Vehicle {
         { cascade: ['insert'] }
     )
     readonly pilots: Person[];
+
+    // Images
+    @OneToMany(
+        type => Image,
+        image => image.vehicle
+    )
+    @JoinTable()
+    readonly images: Image[];
 }

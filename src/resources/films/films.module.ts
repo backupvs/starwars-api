@@ -8,6 +8,8 @@ import { Planet } from '../planets/entities/planet.entity';
 import { Species } from '../species/entities/species.entity';
 import { Vehicle } from '../vehicles/entities/vehicle.entity';
 import { Starship } from '../starships/entities/starship.entity';
+import { Image } from '../../images/entities/image.entity';
+import { ImagesModule } from '../../images/images.module';
 
 @Module({
   imports: [
@@ -17,8 +19,10 @@ import { Starship } from '../starships/entities/starship.entity';
       Planet,
       Species,
       Vehicle,
-      Starship
-    ])
+      Starship,
+      Image
+    ]),
+    ImagesModule
   ],
   controllers: [FilmsController],
   providers: [FilmsService],

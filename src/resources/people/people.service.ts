@@ -10,6 +10,7 @@ import { Species } from '../species/entities/species.entity';
 import { Vehicle } from '../vehicles/entities/vehicle.entity';
 import { Starship } from '../starships/entities/starship.entity';
 import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
+import { ImagesService } from '../../images/images.service';
 
 @Injectable()
 export class PeopleService {
@@ -19,7 +20,8 @@ export class PeopleService {
         @InjectRepository(Planet) private readonly planetRepository: Repository<Planet>,
         @InjectRepository(Species) private readonly speciesRepository: Repository<Species>,
         @InjectRepository(Vehicle) private readonly vehicleRepository: Repository<Vehicle>,
-        @InjectRepository(Starship) private readonly starshipRepository: Repository<Starship>
+        @InjectRepository(Starship) private readonly starshipRepository: Repository<Starship>,
+        private readonly imagesService: ImagesService
     ) {}
 
     findAll(paginationQuery: PaginationQueryDto): Promise<Person[]> {
@@ -29,7 +31,8 @@ export class PeopleService {
                 homeworld: true,
                 species: true,
                 vehicles: true,
-                starships: true
+                starships: true,
+                images: true
             },
             skip: paginationQuery.offset,
             take: paginationQuery.limit,
@@ -44,7 +47,8 @@ export class PeopleService {
                 homeworld: true,
                 species: true,
                 vehicles: true,
-                starships: true
+                starships: true,
+                images: true
             }
         })
 
@@ -96,6 +100,15 @@ export class PeopleService {
         return this.personRepository.remove(person);
     }
 
+    async addImage(id: number, imageFile: Express.Multer.File): Promise<Person> {
+        const person = await this.findOne(id);
+        const key = `${imageFile.fieldname}${Date.now()}`;
+        const image = await this.imagesService.create(imageFile, key);
+        person.images.push(image);
+
+        return this.personRepository.save(person);
+    }
+
     // Preload relations for people
     async preloadRelations(personDto: UpdatePersonDto | CreatePersonDto) {
         const films =
@@ -128,8 +141,8 @@ export class PeopleService {
 
         if (
             films?.includes(null) ||
-            species?.includes(null) || 
-            vehicles?.includes(null) || 
+            species?.includes(null) ||
+            vehicles?.includes(null) ||
             starships?.includes(null)
         ) {
             return null

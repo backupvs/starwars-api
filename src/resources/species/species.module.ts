@@ -6,6 +6,8 @@ import { Planet } from '../planets/entities/planet.entity';
 import { Species } from './entities/species.entity';
 import { SpeciesController } from './species.controller';
 import { SpeciesService } from './species.service';
+import { Image } from '../../images/entities/image.entity';
+import { ImagesModule } from '../../images/images.module';
 
 @Module({
     imports: [
@@ -13,8 +15,10 @@ import { SpeciesService } from './species.service';
             Species,
             Planet,
             Person,
-            Film
-        ])
+            Film,
+            Image
+        ]),
+        ImagesModule
     ],
     controllers: [SpeciesController],
     providers: [SpeciesService],

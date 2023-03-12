@@ -7,6 +7,7 @@ import { Person } from '../people/entities/person.entity';
 import { CreateStarshipDto } from './dto/create-starship.dto';
 import { UpdateStarshipDto } from './dto/update-starship.dto';
 import { Starship } from './entities/starship.entity';
+import { ImagesService } from '../../images/images.service';
 
 @Injectable()
 export class StarshipsService {
@@ -14,6 +15,7 @@ export class StarshipsService {
         @InjectRepository(Starship) private readonly starshipRepository: Repository<Starship>,
         @InjectRepository(Person) private readonly personRepository: Repository<Person>,
         @InjectRepository(Film) private readonly filmRepository: Repository<Film>,
+        private readonly imagesService: ImagesService
     ) {}
 
     findAll(paginationQuery: PaginationQueryDto): Promise<Starship[]> {
@@ -82,6 +84,15 @@ export class StarshipsService {
         const starship = await this.findOne(id);
 
         return this.starshipRepository.remove(starship);
+    }
+
+    async addImage(id: number, imageFile: Express.Multer.File): Promise<Starship> {
+        const starship = await this.findOne(id);
+        const key = `${imageFile.fieldname}${Date.now()}`;
+        const image = await this.imagesService.create(imageFile, key);
+        starship.images.push(image);
+
+        return this.starshipRepository.save(starship);
     }
 
     // Preload relations for starships

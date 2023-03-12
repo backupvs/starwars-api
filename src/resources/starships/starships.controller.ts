@@ -1,15 +1,20 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { StarshipsService } from './starships.service';
 import { CreateStarshipDto } from './dto/create-starship.dto';
 import { UpdateStarshipDto } from './dto/update-starship.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { IdValidationPipe } from '../../common/pipes/id-validation.pipe';
 import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
+import { ImagesService } from '../../images/images.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('starships')
 @Controller('starships')
 export class StarshipsController {
-    constructor(private readonly starshipsService: StarshipsService) {}
+    constructor(
+        private readonly starshipsService: StarshipsService,
+        private readonly imagesService: ImagesService
+    ) {}
 
     @Get()
     findAll(@Query() paginationQuery: PaginationQueryDto) {
@@ -34,5 +39,22 @@ export class StarshipsController {
     @Delete(':id')
     remove(@Param('id', IdValidationPipe) id: string) {
         return this.starshipsService.remove(Number(id));
+    }
+
+    @UseInterceptors(FileInterceptor('image-file'))
+    @Post(':id/add-image')
+    addImage(
+        @Param('id', IdValidationPipe) id: string,
+        @UploadedFile() imageFile: Express.Multer.File
+    ) {
+        return this.starshipsService.addImage(Number(id), imageFile);
+    }
+
+    @Delete(':id/remove-image')
+    removeImage(
+        @Param('id', IdValidationPipe) id: string,
+        @Query('id', IdValidationPipe) imageId: string
+    ) {
+        return this.imagesService.remove(Number(imageId));
     }
 }

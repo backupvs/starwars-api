@@ -1,6 +1,7 @@
-import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Film } from "../../films/entities/film.entity";
 import { Person } from "../../people/entities/person.entity";
+import { Image } from "../../../images/entities/image.entity";
 
 @Entity({ name: 'planets' })
 export class Planet {
@@ -47,4 +48,12 @@ export class Planet {
         film => film.planets
     )
     readonly films: Film[];
+
+    // Images
+    @OneToMany(
+        type => Image,
+        image => image.planet
+    )
+    @JoinTable()
+    readonly images: Image[];
 }

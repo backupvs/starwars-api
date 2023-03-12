@@ -7,6 +7,7 @@ import { Person } from '../people/entities/person.entity';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
 import { Vehicle } from './entities/vehicle.entity';
+import { ImagesService } from '../../images/images.service';
 
 @Injectable()
 export class VehiclesService {
@@ -14,6 +15,7 @@ export class VehiclesService {
         @InjectRepository(Vehicle) private readonly vehicleRepository: Repository<Vehicle>,
         @InjectRepository(Person) private readonly personRepository: Repository<Person>,
         @InjectRepository(Film) private readonly filmRepository: Repository<Film>,
+        private readonly imagesService: ImagesService
     ) {}
 
     findAll(paginationQuery: PaginationQueryDto): Promise<Vehicle[]> {
@@ -80,6 +82,15 @@ export class VehiclesService {
         const vehicle = await this.findOne(id);
 
         return this.vehicleRepository.remove(vehicle);
+    }
+
+    async addImage(id: number, imageFile: Express.Multer.File): Promise<Vehicle> {
+        const vehicle = await this.findOne(id);
+        const key = `${imageFile.fieldname}${Date.now()}`;
+        const image = await this.imagesService.create(imageFile, key);
+        vehicle.images.push(image);
+
+        return this.vehicleRepository.save(vehicle);
     }
 
     // Preload relations for vehicles

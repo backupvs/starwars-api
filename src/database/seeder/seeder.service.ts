@@ -1,7 +1,5 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { FilmsService } from '../../resources/films/films.service';
-import { PeopleService } from '../../resources/people/people.service';
 import { CreateDtos, CreateDtosWithIds, SwapiResponseData } from './types';
 import { CreateFilmDto } from "../../resources/films/dto/create-film.dto";
 import { CreatePersonDto } from "../../resources/people/dto/create-person.dto";
@@ -9,6 +7,8 @@ import { CreatePlanetDto } from "../../resources/planets/dto/create-planet.dto";
 import { CreateSpeciesDto } from "../../resources/species/dto/create-species.dto";
 import { CreateStarshipDto } from "../../resources/starships/dto/create-starship.dto";
 import { CreateVehicleDto } from "../../resources/vehicles/dto/create-vehicle.dto";
+import { FilmsService } from '../../resources/films/films.service';
+import { PeopleService } from '../../resources/people/people.service';
 import { PlanetsService } from '../../resources/planets/planets.service';
 import { SpeciesService } from '../../resources/species/species.service';
 import { VehiclesService } from '../../resources/vehicles/vehicles.service';
@@ -41,7 +41,7 @@ export class SeederService {
     // Updates entities with names instead of urls
     async updateWithRelations(dtosWithIds: CreateDtosWithIds) {
         let start = Date.now();
-        process.stdout.write('Updating mocks with relations...');
+        process.stdout.write('Updating mocks with relations (it may take a few minutes)...');
         await this.updateMocks(dtosWithIds.peopleWithIds, this.peopleService);
         await this.updateMocks(dtosWithIds.planetsWithIds, this.planetsService);
         await this.updateMocks(dtosWithIds.filmsWithIds, this.filmsService);

@@ -8,6 +8,7 @@ import { CreateSpeciesDto } from './dto/create-species.dto';
 import { Species } from './entities/species.entity';
 import { UpdateSpeciesDto } from './dto/update-species.dto';
 import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
+import { ImagesService } from '../../images/images.service';
 
 @Injectable()
 export class SpeciesService {
@@ -15,7 +16,8 @@ export class SpeciesService {
         @InjectRepository(Species) private readonly speciesRepository: Repository<Species>,
         @InjectRepository(Person) private readonly personRepository: Repository<Person>,
         @InjectRepository(Film) private readonly filmRepository: Repository<Film>,
-        @InjectRepository(Planet) private readonly planetRepository: Repository<Planet>
+        @InjectRepository(Planet) private readonly planetRepository: Repository<Planet>,
+        private readonly imagesService: ImagesService
     ) {}
 
     findAll(paginationQuery: PaginationQueryDto): Promise<Species[]> {
@@ -86,6 +88,15 @@ export class SpeciesService {
         const species = await this.findOne(id);
 
         return this.speciesRepository.remove(species);
+    }
+
+    async addImage(id: number, imageFile: Express.Multer.File): Promise<Species> {
+        const species = await this.findOne(id);
+        const key = `${imageFile.fieldname}${Date.now()}`;
+        const image = await this.imagesService.create(imageFile, key);
+        species.images.push(image);
+
+        return this.speciesRepository.save(species);
     }
 
     // Preload relations for species

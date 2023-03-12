@@ -10,6 +10,7 @@ import { Species } from '../species/entities/species.entity';
 import { Vehicle } from '../vehicles/entities/vehicle.entity';
 import { Starship } from '../starships/entities/starship.entity';
 import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
+import { ImagesService } from '../../images/images.service';
 
 @Injectable()
 export class FilmsService {
@@ -19,7 +20,8 @@ export class FilmsService {
         @InjectRepository(Planet) private readonly planetRepository: Repository<Planet>,
         @InjectRepository(Species) private readonly speciesRepository: Repository<Species>,
         @InjectRepository(Vehicle) private readonly vehicleRepository: Repository<Vehicle>,
-        @InjectRepository(Starship) private readonly starshipRepository: Repository<Starship>
+        @InjectRepository(Starship) private readonly starshipRepository: Repository<Starship>,
+        private readonly imagesService: ImagesService
     ) {}
 
     findAll(paginationQuery: PaginationQueryDto): Promise<Film[]> {
@@ -29,7 +31,8 @@ export class FilmsService {
                 planets: true,
                 species: true,
                 vehicles: true,
-                starships: true
+                starships: true,
+                images: true
             },
             skip: paginationQuery.offset,
             take: paginationQuery.limit,
@@ -45,7 +48,8 @@ export class FilmsService {
                 planets: true,
                 species: true,
                 vehicles: true,
-                starships: true
+                starships: true,
+                images: true
             }
         });
 
@@ -87,6 +91,15 @@ export class FilmsService {
         if (!film) {
             throw new NotFoundException(`Film #${id} not found`);
         }
+
+        return this.filmRepository.save(film);
+    }
+    
+    async addImage(id: number, imageFile: Express.Multer.File): Promise<Film> {
+        const film = await this.findOne(id);
+        const key = `${imageFile.fieldname}${Date.now()}`;
+        const image = await this.imagesService.create(imageFile, key);
+        film.images.push(image);
 
         return this.filmRepository.save(film);
     }

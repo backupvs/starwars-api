@@ -7,13 +7,15 @@ import { UpdatePlanetDto } from './dto/update-planet.dto';
 import { Person } from '../people/entities/person.entity';
 import { Film } from '../films/entities/film.entity';
 import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
+import { ImagesService } from '../../images/images.service';
 
 @Injectable()
 export class PlanetsService {
     constructor(
         @InjectRepository(Planet) private readonly planetRepository: Repository<Planet>,
         @InjectRepository(Person) private readonly personRepository: Repository<Person>,
-        @InjectRepository(Film) private readonly filmRepository: Repository<Film>
+        @InjectRepository(Film) private readonly filmRepository: Repository<Film>,
+        private readonly imagesService: ImagesService
     ) {}
 
     findAll(paginationQuery: PaginationQueryDto): Promise<Planet[]> {
@@ -82,6 +84,15 @@ export class PlanetsService {
         const planet = await this.findOne(id);
 
         return this.planetRepository.remove(planet);
+    }
+
+    async addImage(id: number, imageFile: Express.Multer.File): Promise<Planet> {
+        const planet = await this.findOne(id);
+        const key = `${imageFile.fieldname}${Date.now()}`;
+        const image = await this.imagesService.create(imageFile, key);
+        planet.images.push(image);
+
+        return this.planetRepository.save(planet);
     }
 
     // Preload relations for planets

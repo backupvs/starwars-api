@@ -1,9 +1,10 @@
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Film } from "../../films/entities/film.entity";
 import { Planet } from "../../planets/entities/planet.entity";
 import { Species } from "../../species/entities/species.entity";
 import { Vehicle } from "../../vehicles/entities/vehicle.entity";
 import { Starship } from "../../starships/entities/starship.entity";
+import { Image } from "../../../images/entities/image.entity";
 
 @Entity({ name: 'people' })
 export class Person {
@@ -75,4 +76,12 @@ export class Person {
     )
     @JoinTable()
     readonly starships: Starship[];
+
+    // Images
+    @OneToMany(
+        type => Image,
+        image => image.person
+    )
+    @JoinTable()
+    readonly images: Image[];
 }
