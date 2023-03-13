@@ -8,6 +8,7 @@ import { CreateFilmDto } from './dto/create-film.dto';
 import { UpdateFilmDto } from './dto/update-film.dto';
 import { Film } from './entities/film.entity';
 import { FilmsService } from './films.service';
+import { FileValidationPipe } from '../../common/pipes/file-validation.pipe';
 
 @ApiTags('films')
 @Controller('films')
@@ -46,7 +47,7 @@ export class FilmsController {
     @Post(':id/add-image')
     addImage(
         @Param('id', IdValidationPipe) id: string,
-        @UploadedFile() imageFile: Express.Multer.File
+        @UploadedFile(FileValidationPipe) imageFile: Express.Multer.File
     ) {
         return this.filmsService.addImage(Number(id), imageFile);
     }

@@ -7,6 +7,7 @@ import { IdValidationPipe } from '../../common/pipes/id-validation.pipe';
 import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 import { ImagesService } from '../../images/images.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { FileValidationPipe } from '../../common/pipes/file-validation.pipe';
 
 @ApiTags('starships')
 @Controller('starships')
@@ -45,7 +46,7 @@ export class StarshipsController {
     @Post(':id/add-image')
     addImage(
         @Param('id', IdValidationPipe) id: string,
-        @UploadedFile() imageFile: Express.Multer.File
+        @UploadedFile(FileValidationPipe) imageFile: Express.Multer.File
     ) {
         return this.starshipsService.addImage(Number(id), imageFile);
     }

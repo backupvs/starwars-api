@@ -8,6 +8,7 @@ import { IdValidationPipe } from '../../common/pipes/id-validation.pipe';
 import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
 import { PeopleService } from './people.service';
+import { FileValidationPipe } from '../../common/pipes/file-validation.pipe';
 
 @ApiTags('people')
 @Controller('people')
@@ -46,7 +47,7 @@ export class PeopleController {
     @Post(':id/add-image')
     addImage(
         @Param('id', IdValidationPipe) id: string,
-        @UploadedFile() imageFile: Express.Multer.File
+        @UploadedFile(FileValidationPipe) imageFile: Express.Multer.File
     ) {
         return this.peopleService.addImage(Number(id), imageFile);
     }

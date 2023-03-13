@@ -7,6 +7,7 @@ import { IdValidationPipe } from '../../common/pipes/id-validation.pipe';
 import { CreateSpeciesDto } from './dto/create-species.dto';
 import { UpdateSpeciesDto } from './dto/update-species.dto';
 import { SpeciesService } from './species.service';
+import { FileValidationPipe } from '../../common/pipes/file-validation.pipe';
 
 @ApiTags('species')
 @Controller('species')
@@ -45,7 +46,7 @@ export class SpeciesController {
     @Post(':id/add-image')
     addImage(
         @Param('id', IdValidationPipe) id: string,
-        @UploadedFile() imageFile: Express.Multer.File
+        @UploadedFile(FileValidationPipe) imageFile: Express.Multer.File
     ) {
         return this.speciesService.addImage(Number(id), imageFile);
     }

@@ -7,6 +7,7 @@ import { IdValidationPipe } from '../../common/pipes/id-validation.pipe';
 import { CreatePlanetDto } from './dto/create-planet.dto';
 import { UpdatePlanetDto } from './dto/update-planet.dto';
 import { PlanetsService } from './planets.service';
+import { FileValidationPipe } from '../../common/pipes/file-validation.pipe';
 
 @ApiTags('planets')
 @Controller('planets')
@@ -45,7 +46,7 @@ export class PlanetsController {
     @Post(':id/add-image')
     addImage(
         @Param('id', IdValidationPipe) id: string,
-        @UploadedFile() imageFile: Express.Multer.File
+        @UploadedFile(FileValidationPipe) imageFile: Express.Multer.File
     ) {
         return this.planetsService.addImage(Number(id), imageFile);
     }
