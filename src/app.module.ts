@@ -10,20 +10,26 @@ import { VehiclesModule } from './resources/vehicles/vehicles.module';
 import { StarshipsModule } from './resources/starships/starships.module';
 import { SeederModule } from './database/seeder/seeder.module';
 import { ImagesModule } from './images/images.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { AppController } from './app.controller';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
-    CommandModule,
-    ImagesModule,
-    PeopleModule,
-    DatabaseModule,
-    FilmsModule,
-    PlanetsModule,
-    SpeciesModule,
-    VehiclesModule,
-    StarshipsModule,
-    SeederModule,
-  ],
+    imports: [
+        ConfigModule.forRoot({ isGlobal: true }),
+        CommandModule,
+        ImagesModule,
+        PeopleModule,
+        DatabaseModule,
+        FilmsModule,
+        PlanetsModule,
+        SpeciesModule,
+        VehiclesModule,
+        StarshipsModule,
+        SeederModule,
+        AuthModule,
+        UsersModule,
+    ],
+    controllers: [AppController],
 })
 export class AppModule {}

@@ -175,7 +175,7 @@ export class SeederService {
 
         for (let i = 0; i < keys.length; i++) {
             let key = keys[i];
-            if (['url'].includes(key)) continue;
+            if (key === 'url') continue;
             const value = dto[key];
 
             if (Array.isArray(value) && value.length > 0) {
