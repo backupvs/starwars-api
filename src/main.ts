@@ -24,7 +24,7 @@ async function bootstrap() {
   );
 
   // Global filters
-  app.useGlobalFilters(new UniqueConstraintExceptionFilter())
+  app.useGlobalFilters(new UniqueConstraintExceptionFilter());
 
   // Global interceptors
   app.useGlobalInterceptors(new WrapResponseInterceptor());
