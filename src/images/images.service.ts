@@ -11,6 +11,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Image } from './entities/image.entity';
 import { Repository } from 'typeorm';
 
+export type removedImg = {
+    key: string,
+    imageUrl: string
+}
+
 @Injectable()
 export class ImagesService {
     private readonly logger = new Logger();

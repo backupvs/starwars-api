@@ -12,8 +12,6 @@ import { SeederModule } from './database/seeder/seeder.module';
 import { ImagesModule } from './images/images.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-import { APP_GUARD } from '@nestjs/core';
-import { RolesGuard } from './common/guards/roles.guard';
 
 @Module({
     imports: [

@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseInterceptors } from '@nestjs/common';
 import { UploadedFile, UseGuards } from '@nestjs/common/decorators';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { ImagesService } from '../../images/images.service';
 import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 import { IdValidationPipe } from '../../common/pipes/id-validation.pipe';
@@ -53,6 +53,20 @@ export class PeopleController {
         return this.peopleService.remove(Number(id));
     }
 
+    @ApiConsumes('multipart/form-data')
+    @ApiBody({
+        schema: {
+            type: 'object',
+            properties: {
+                ['image-file']: {
+                    type: 'string',
+                    format: 'binary',
+                    description: 'The image file to upload'
+                },
+            },
+            required: ['image-file']
+        },
+    })
     @UseGuards(AuthGuard('jwt'), RolesGuard)
     @UseInterceptors(FileInterceptor('image-file'))
     @Post(':id/add-image')

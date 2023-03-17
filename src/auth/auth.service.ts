@@ -4,7 +4,7 @@ import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../users/dto/create-user.dto';
-import { IsStrongPassword } from 'class-validator';
+import { LoginUserDto } from './dto/login-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -15,7 +15,8 @@ export class AuthService {
         private readonly jwtService: JwtService
     ) {}
 
-    async validateUser(username: string, passwordInput: string): Promise<Omit<User, 'password'> | null> {
+    async validateUser(loginUserDto: LoginUserDto): Promise<Omit<User, 'password'> | null> {
+        const { username, password: passwordInput } = loginUserDto;
         const user = await this.usersService.findOne(username);
         const isValid = await bcrypt.compare(passwordInput, user?.password || '');
         if (!user || !isValid) return null;

@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UploadedFile,
 import { VehiclesService } from './vehicles.service';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { IdValidationPipe } from '../../common/pipes/id-validation.pipe';
 import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 import { ImagesService } from '../../images/images.service';
@@ -52,6 +52,20 @@ export class VehiclesController {
         return this.vehiclesService.remove(Number(id));
     }
 
+    @ApiConsumes('multipart/form-data')
+    @ApiBody({
+        schema: {
+            type: 'object',
+            properties: {
+                ['image-file']: {
+                    type: 'string',
+                    format: 'binary',
+                    description: 'The image file to upload'
+                },
+            },
+            required: ['image-file']
+        },
+    })
     @UseGuards(AuthGuard('jwt'), RolesGuard)
     @UseInterceptors(FileInterceptor('image-file'))
     @Post(':id/add-image')
