@@ -10,6 +10,8 @@ import { Vehicle } from '../vehicles/entities/vehicle.entity';
 import { Starship } from '../starships/entities/starship.entity';
 import { Image } from '../../images/entities/image.entity';
 import { ImagesModule } from '../../images/images.module';
+import { RolesGuard } from '../../common/guards/roles.guard';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [

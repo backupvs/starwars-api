@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 import { ImagesService } from '../../images/images.service';
@@ -8,6 +8,10 @@ import { CreatePlanetDto } from './dto/create-planet.dto';
 import { UpdatePlanetDto } from './dto/update-planet.dto';
 import { PlanetsService } from './planets.service';
 import { FileValidationPipe } from '../../common/pipes/file-validation.pipe';
+import { AuthGuard } from '@nestjs/passport';
+import { Roles } from '../../common/decorators/roles.decorator';
+import { RolesGuard } from '../../common/guards/roles.guard';
+import { Role } from '../../users/entities/role.enum';
 
 @ApiTags('planets')
 @Controller('planets')
@@ -27,35 +31,35 @@ export class PlanetsController {
         return this.planetsService.findOne(Number(id));
     }
 
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
     @Post()
+    @Roles(Role.ADMIN)
     create(@Body() createPlanetDto: CreatePlanetDto) {
         return this.planetsService.create(createPlanetDto);
     }
 
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
     @Patch(':id')
+    @Roles(Role.ADMIN)
     update(@Param('id', IdValidationPipe) id: string, @Body() updatePlanetDto: UpdatePlanetDto) {
         return this.planetsService.update(Number(id), updatePlanetDto);
     }
 
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
     @Delete(':id')
+    @Roles(Role.ADMIN)
     remove(@Param('id', IdValidationPipe) id: string) {
         return this.planetsService.remove(Number(id));
     }
 
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
     @UseInterceptors(FileInterceptor('image-file'))
     @Post(':id/add-image')
+    @Roles(Role.ADMIN)
     addImage(
         @Param('id', IdValidationPipe) id: string,
         @UploadedFile(FileValidationPipe) imageFile: Express.Multer.File
     ) {
         return this.planetsService.addImage(Number(id), imageFile);
-    }
-
-    @Delete(':id/remove-image')
-    removeImage(
-        @Param('id', IdValidationPipe) id: string,
-        @Query('id', IdValidationPipe) imageId: string
-    ) {
-        return this.imagesService.remove(Number(imageId));
     }
 }

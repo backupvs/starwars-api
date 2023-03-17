@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 import { ImagesService } from '../../images/images.service';
@@ -8,6 +8,10 @@ import { CreateSpeciesDto } from './dto/create-species.dto';
 import { UpdateSpeciesDto } from './dto/update-species.dto';
 import { SpeciesService } from './species.service';
 import { FileValidationPipe } from '../../common/pipes/file-validation.pipe';
+import { AuthGuard } from '@nestjs/passport';
+import { Roles } from '../../common/decorators/roles.decorator';
+import { RolesGuard } from '../../common/guards/roles.guard';
+import { Role } from '../../users/entities/role.enum';
 
 @ApiTags('species')
 @Controller('species')
@@ -27,35 +31,35 @@ export class SpeciesController {
         return this.speciesService.findOne(Number(id));
     }
 
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
     @Post()
+    @Roles(Role.ADMIN)
     create(@Body() createPersonDto: CreateSpeciesDto) {
         return this.speciesService.create(createPersonDto);
     }
 
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
     @Patch(':id')
+    @Roles(Role.ADMIN)
     update(@Param('id', IdValidationPipe) id: string, @Body() updatePersonDto: UpdateSpeciesDto) {
         return this.speciesService.update(Number(id), updatePersonDto);
     }
 
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
     @Delete(':id')
+    @Roles(Role.ADMIN)
     remove(@Param('id', IdValidationPipe) id: string) {
         return this.speciesService.remove(Number(id));
     }
 
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
     @UseInterceptors(FileInterceptor('image-file'))
     @Post(':id/add-image')
+    @Roles(Role.ADMIN)
     addImage(
         @Param('id', IdValidationPipe) id: string,
         @UploadedFile(FileValidationPipe) imageFile: Express.Multer.File
     ) {
         return this.speciesService.addImage(Number(id), imageFile);
-    }
-
-    @Delete(':id/remove-image')
-    removeImage(
-        @Param('id', IdValidationPipe) id: string,
-        @Query('id', IdValidationPipe) imageId: string
-    ) {
-        return this.imagesService.remove(Number(imageId));
     }
 }
