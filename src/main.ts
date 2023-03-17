@@ -5,6 +5,7 @@ import { ValidationPipe } from "@nestjs/common";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { UniqueConstraintExceptionFilter } from "./common/filters/unique-constraint-exception.filter";
 import { WrapResponseInterceptor } from "./common/interceptors/wrap-response.interceptor";
+import { HttpExceptionFilter } from "./common/filters/http-exception.filter";
 
 const PORT = process.env.PORT || 3000;
 
@@ -24,7 +25,7 @@ async function bootstrap() {
   );
 
   // Global filters
-  app.useGlobalFilters(new UniqueConstraintExceptionFilter());
+  app.useGlobalFilters(new HttpExceptionFilter(), new UniqueConstraintExceptionFilter());
 
   // Global interceptors
   app.useGlobalInterceptors(new WrapResponseInterceptor());
