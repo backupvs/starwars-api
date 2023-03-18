@@ -28,9 +28,14 @@ export class TruncateDataCommand {
                         END LOOP;   
                     END $$;`
             );
+            await this.removeResourcesSeederStatus();
             console.log('Success');
         } catch (err) {
             console.log('Error', err.message);
         }
+    }
+
+    removeResourcesSeederStatus() {
+        return this.dataSource.query(`DELETE FROM seeders WHERE name = 'resources'`);
     }
 }

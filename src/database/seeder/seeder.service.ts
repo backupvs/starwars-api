@@ -13,12 +13,16 @@ import { PlanetsService } from '../../resources/planets/planets.service';
 import { SpeciesService } from '../../resources/species/species.service';
 import { VehiclesService } from '../../resources/vehicles/vehicles.service';
 import { StarshipsService } from '../../resources/starships/starships.service';
+import { DataSource } from 'typeorm';
+import { InjectDataSource } from '@nestjs/typeorm';
 
 @Injectable()
 export class SeederService {
     SWAPI_URL = 'https://swapi.dev/api/';
 
     constructor(
+        @InjectDataSource()
+        private readonly dataSource: DataSource,
         private readonly httpService: HttpService,
         private readonly filmsService: FilmsService,
         private readonly peopleService: PeopleService,
@@ -30,12 +34,31 @@ export class SeederService {
 
     async seed(): Promise<void> {
         try {
+            const isAlreadySeeded = await this.getResourcesSeedStatus();
+
+            if (isAlreadySeeded) {
+                return console.log('Database is already seeded with resources');
+            }
+
             const dtos = await this.collectSwapiData();
             const dtosWithIds = await this.saveMockData(dtos);
             await this.updateWithRelations(dtosWithIds);
+            await this.registerResourcesSeeder();
         } catch (err) {
             this.logError();
         }
+    }
+
+    async registerResourcesSeeder() {
+        await this.createSeedersTableIfNotExists();
+        return this.dataSource.query(`INSERT INTO seeders(name) VALUES('resources')`)
+    }
+
+    async getResourcesSeedStatus() {
+        await this.createSeedersTableIfNotExists();
+        const result = await this.dataSource.query(`SELECT * FROM seeders WHERE name = 'resources'`);
+
+        return result.length > 0;
     }
 
     // Updates entities with names instead of urls
@@ -209,4 +232,15 @@ export class SeederService {
             `\npeople, planets, films, vehicles, starships, species`
         );
     }
+
+    createSeedersTableIfNotExists() {
+        return this.dataSource.query(
+            `CREATE TABLE IF NOT EXISTS seeders (
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT NOW()
+            )`
+        );
+    }
+    
 }

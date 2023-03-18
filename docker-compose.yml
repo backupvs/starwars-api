@@ -1,31 +1,54 @@
 version: "3"
+
 services:
-  postgres:
-    container_name: postgres
-    image: postgres:latest
-    ports:
-    - "5432:5432"
-    volumes:
-    - /data/postgres:/data/postgres
+  # PosgreSQL server
+  db:
+    image: postgres:13
     env_file:
-    - docker.env
-    networks:
-    - postgres
- 
-  pgadmin:
+      - postgres.env
+    volumes:
+      - data:/var/lib/postgresql/data
+
+  # Starwars API app
+  app:
+    build: .
+    restart: always
+    ports:
+      - "3000:3000"
     links:
-    - postgres:postgres
-    container_name: pgadmin
-    image: dpage/pgadmin4
-    ports:
-    - "8080:80"
-    volumes:
-    - /data/pgadmin:/root/.pgadmin
+      - db
+    depends_on:
+      - db
+      - migration
+      - seed
     env_file:
-    - docker.env
-    networks:
-    - postgres
- 
-networks:
-  postgres:
-    driver: bridge
+      - .env
+    command: ["npm", "run", "start:prod"]
+
+  # Migration service
+  migration:
+    build:
+      context: .
+    links:
+      - db
+    depends_on:
+      - db
+    command: ["npm", "run", "typeorm:run-migrations"]
+    env_file:
+      - .env
+  
+  # Seed service
+  seed:
+    build:
+      context: .
+    links:
+      - db
+    depends_on:
+      - db
+      - migration
+    command: ["npm", "run", "seeder:seed"]
+    env_file:
+      - .env
+
+volumes:
+  data:

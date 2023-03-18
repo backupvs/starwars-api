@@ -1,4 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Role } from "./role.enum";
 
 @Entity({ name: 'users' })
 export class User {
@@ -12,5 +13,5 @@ export class User {
     readonly password: string;
 
     @Column()
-    readonly role: 'admin' | 'user';
+    readonly role: Role;
 }

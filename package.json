@@ -2,7 +2,7 @@
   "name": "starwars-api",
   "version": "0.0.1",
   "description": "API to work with data from Star Wars universe.",
-  "author": "",
+  "author": "backupvs",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
