@@ -1,8 +1,8 @@
 ## Description
 
 API to work with data from Star Wars universe. </br>
-Seeded by data from <a href="https://swapi.dev">SWAPI.dev</a>
-You can see deployed app here: https://starwars-api-nestjs.fly.dev/api
+Seeded by data from <a href="https://swapi.dev" target="_blank">SWAPI.dev</a>. </br>
+You can see deployed app here: <a href="https://starwars-api-nestjs.fly.dev/api" target="_blank">https://starwars-api-nestjs.fly.dev/api</a>
 
 ## Running with Docker
 1. Create and configure '.env' file in root directory:
