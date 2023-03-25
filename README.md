@@ -6,7 +6,7 @@ You can see deployed app here: <a href="https://starwars-api-nestjs.fly.dev/api"
 
 ## Running with Docker
 1. Create and configure '.env' file in root directory:
-```
+```env
   PORT=<port>
 
   # Postgres
@@ -26,7 +26,7 @@ You can see deployed app here: <a href="https://starwars-api-nestjs.fly.dev/api"
   JWT_EXPIRES_IN=<expiration time> (e.g. 60s)
 ```
 2. Create and configure 'postgres.env' file in root directory:
-```
+```env
   POSTGRES_USER=<username>
   POSTGRES_PASSWORD=<password>
   POSTGRES_DB=<database name>
