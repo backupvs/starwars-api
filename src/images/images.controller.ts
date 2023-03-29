@@ -1,6 +1,6 @@
 import { Controller, Delete, Param } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { IdValidationPipe } from 'src/common/pipes/id-validation.pipe';
+import { IdValidationPipe } from '../common/pipes/id-validation.pipe';
 import { ImagesService } from './images.service';
 
 @ApiTags('images')
