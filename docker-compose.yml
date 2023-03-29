@@ -1,6 +1,7 @@
 version: "3"
 
 services:
+
   # PosgreSQL server
   db:
     image: postgres:13
@@ -21,34 +22,12 @@ services:
       - db
     depends_on:
       - db
-      - migration
-      - seed
     env_file:
       - .env
-    command: ["npm", "run", "start:dev"]
-
-  # Migration service
-  migration:
-    build: .
-    links:
-      - db
-    depends_on:
-      - db
-    command: ["npm", "run", "typeorm:run-migrations"]
-    env_file:
-      - .env
-  
-  # Seed service
-  seed:
-    build: .
-    links:
-      - db
-    depends_on:
-      - db
-      - migration
-    command: ["npm", "run", "seeder:seed"]
-    env_file:
-      - .env
+    command: >
+      sh -c "npm run typeorm:run-migrations &&
+             npm run seeder:seed &&
+             npm run start:dev"
 
 volumes:
   data:
