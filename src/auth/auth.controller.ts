@@ -4,9 +4,9 @@ import { ApiBody, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swa
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from './dto/login-user.dto';
-import { RequestWithUser } from './requestWithUser.interface';
+import { RequestWithUser } from './interfaces/requestWithUser.interface';
 import { UserWithoutPasswordDto } from './dto/user-without-password.dto';
-import { ResponseWithAccessToken } from './responseWithAccessToken.interface';
+import { ResponseWithAccessToken } from './interfaces/responseWithAccessToken.interface';
 
 @ApiTags('auth')
 @Controller('auth')

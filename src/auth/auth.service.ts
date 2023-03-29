@@ -5,7 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { UserWithoutPasswordDto } from './dto/user-without-password.dto';
-import { ResponseWithAccessToken } from './responseWithAccessToken.interface';
+import { ResponseWithAccessToken } from './interfaces/responseWithAccessToken.interface';
 
 @Injectable()
 export class AuthService {
