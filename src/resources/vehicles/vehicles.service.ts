@@ -23,7 +23,9 @@ export class VehiclesService {
             relations: {
                 films: true,
                 pilots: true
-            }
+            },
+            skip: paginationQuery.offset,
+            take: paginationQuery.limit
         });
     }
 
