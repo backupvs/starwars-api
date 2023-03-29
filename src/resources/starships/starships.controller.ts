@@ -5,7 +5,6 @@ import { UpdateStarshipDto } from './dto/update-starship.dto';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { IdValidationPipe } from '../../common/pipes/id-validation.pipe';
 import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
-import { ImagesService } from '../../images/images.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileValidationPipe } from '../../common/pipes/file-validation.pipe';
 import { AuthGuard } from '@nestjs/passport';
@@ -18,7 +17,6 @@ import { Role } from '../../users/entities/role.enum';
 export class StarshipsController {
     constructor(
         private readonly starshipsService: StarshipsService,
-        private readonly imagesService: ImagesService
     ) {}
 
     @Get()

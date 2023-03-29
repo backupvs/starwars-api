@@ -1,7 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
-import { ImagesService } from '../../images/images.service';
 import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 import { IdValidationPipe } from '../../common/pipes/id-validation.pipe';
 import { CreateSpeciesDto } from './dto/create-species.dto';
@@ -18,7 +17,6 @@ import { Role } from '../../users/entities/role.enum';
 export class SpeciesController {
     constructor(
         private readonly speciesService: SpeciesService,
-        private readonly imagesService: ImagesService
     ) {}
 
     @Get()

@@ -2,7 +2,6 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseIntercepto
 import { UploadedFile, UseGuards } from '@nestjs/common/decorators';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
-import { ImagesService } from '../../images/images.service';
 import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 import { IdValidationPipe } from '../../common/pipes/id-validation.pipe';
 import { CreatePersonDto } from './dto/create-person.dto';
@@ -19,7 +18,6 @@ import { Role } from '../../users/entities/role.enum';
 export class PeopleController {
     constructor(
         private readonly peopleService: PeopleService,
-        private readonly imagesService: ImagesService
     ) {}
 
     @Get()

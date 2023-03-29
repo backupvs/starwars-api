@@ -1,20 +1,6 @@
-import {
-    Body,
-    Controller,
-    Delete,
-    Get,
-    Param,
-    Patch,
-    Post,
-    Query,
-    UploadedFile,
-    UseGuards,
-    UseInterceptors,
-    Request
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
-import { ImagesService } from '../../images/images.service';
 import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 import { IdValidationPipe } from '../../common/pipes/id-validation.pipe';
 import { CreateFilmDto } from './dto/create-film.dto';
@@ -32,7 +18,6 @@ import { RolesGuard } from '../../common/guards/roles.guard';
 export class FilmsController {
     constructor(
         private readonly filmsService: FilmsService,
-        private readonly imagesService: ImagesService
     ) {}
 
     @Get()
