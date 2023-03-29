@@ -4,6 +4,8 @@ services:
   # PosgreSQL server
   db:
     image: postgres:13
+    ports:
+      - "5432:5432"
     env_file:
       - postgres.env
     volumes:
@@ -23,12 +25,11 @@ services:
       - seed
     env_file:
       - .env
-    command: ["npm", "run", "start:prod"]
+    command: ["npm", "run", "start:dev"]
 
   # Migration service
   migration:
-    build:
-      context: .
+    build: .
     links:
       - db
     depends_on:
@@ -39,8 +40,7 @@ services:
   
   # Seed service
   seed:
-    build:
-      context: .
+    build: .
     links:
       - db
     depends_on:
